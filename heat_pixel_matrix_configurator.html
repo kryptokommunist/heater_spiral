@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heat Pixel Jacket — Matrix Configurator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1117;
+    color: #c9d1d9;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── Left panel ── */
+  #panel {
+    width: 300px;
+    min-width: 300px;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #panel h1 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e6edf3;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 8px;
+  }
+
+  .section { display: flex; flex-direction: column; gap: 10px; }
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 12px; color: #8b949e; display: flex; justify-content: space-between; }
+  .field label span { color: #e6edf3; font-weight: 600; }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: #f78166;
+    height: 4px;
+    cursor: pointer;
+  }
+
+  .row-inputs { display: flex; gap: 8px; }
+  .row-inputs .field { flex: 1; }
+
+  input[type=number] {
+    width: 100%;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 13px;
+  }
+  input[type=number]:focus { outline: none; border-color: #f78166; }
+
+  .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .radio-group label {
+    display: flex; align-items: center; gap: 5px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    color: #c9d1d9;
+  }
+  .radio-group input[type=radio] { display: none; }
+  .radio-group input[type=radio]:checked + label {
+    border-color: #f78166;
+    background: #1f1612;
+    color: #f78166;
+  }
+
+  .select-group { display: flex; flex-direction: column; gap: 6px; }
+  .select-group label {
+    display: flex; align-items: center; gap: 8px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    color: #c9d1d9;
+  }
+  .select-group input[type=radio] { display: none; }
+  .select-group input[type=radio]:checked + label {
+    border-color: #f78166;
+    background: #1f1612;
+    color: #f78166;
+  }
+
+  /* ── Readouts ── */
+  #readouts {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .readout-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #8b949e;
+  }
+  .readout-row span:last-child { color: #e6edf3; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .readout-row.highlight span:last-child { color: #f78166; }
+  .readout-divider { border: none; border-top: 1px solid #21262d; margin: 2px 0; }
+
+  /* ── SVG viewport ── */
+  #viewport {
+    flex: 1;
+    overflow: auto;
+    background: #090d13;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+
+  #main-svg {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ LEFT PANEL ═══ -->
+<div id="panel">
+  <h1>Heat Pixel Jacket</h1>
+
+  <div class="section">
+    <div class="section-title">Jacket area</div>
+    <div class="row-inputs">
+      <div class="field">
+        <label>Width (cm) <span id="lbl-w">51</span></label>
+        <input type="range" id="inp-w" min="10" max="100" step="1" value="51">
+      </div>
+      <div class="field">
+        <label>Height (cm) <span id="lbl-h">51</span></label>
+        <input type="range" id="inp-h" min="10" max="120" step="1" value="51">
+      </div>
+    </div>
+    <div class="row-inputs">
+      <div class="field">
+        <label>Columns (px)</label>
+        <input type="number" id="inp-cols" min="1" max="64" step="1" value="16">
+      </div>
+      <div class="field">
+        <label>Rows (px)</label>
+        <input type="number" id="inp-rows" min="1" max="64" step="1" value="19">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Pixel size</div>
+    <div class="field">
+      <label>Side (cm) <span id="lbl-pside">3.2</span></label>
+      <input type="range" id="inp-pside" min="0.5" max="10" step="0.1" value="4">
+    </div>
+    <div class="field">
+      <label>Area (cm²) <span id="lbl-psize">10</span></label>
+      <input type="range" id="inp-psize" min="1" max="100" step="0.5" value="16">
+    </div>
+    <div style="font-size:11px;color:#546e8a;margin-top:-4px;">Square pixels — side and area stay in sync</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Supply voltage</div>
+    <div class="radio-group">
+      <input type="radio" name="voltage" id="v5" value="5">
+      <label for="v5">5 V</label>
+      <input type="radio" name="voltage" id="v12" value="12" checked>
+      <label for="v12">12 V</label>
+      <input type="radio" name="voltage" id="v24" value="24">
+      <label for="v24">24 V</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Temperature range</div>
+    <div class="field">
+      <label>Min °C <span id="lbl-tmin">40</span></label>
+      <input type="range" id="inp-tmin" min="22" max="80" step="1" value="40">
+    </div>
+    <div class="field">
+      <label>Max °C <span id="lbl-tmax">70</span></label>
+      <input type="range" id="inp-tmax" min="22" max="90" step="1" value="70">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Meander pattern</div>
+    <div class="select-group">
+      <input type="radio" name="pattern" id="pat-lr" value="lr" checked>
+      <label for="pat-lr">↔ Snake horizontal</label>
+      <input type="radio" name="pattern" id="pat-tb" value="tb">
+      <label for="pat-tb">↕ Snake vertical</label>
+      <input type="radio" name="pattern" id="pat-spiral" value="spiral">
+      <label for="pat-spiral">◎ Spiral inward</label>
+      <input type="radio" name="pattern" id="pat-circle" value="circle">
+      <label for="pat-circle">◯ Concentric circles</label>
+      <input type="radio" name="pattern" id="pat-diag" value="diag">
+      <label for="pat-diag">╱ Diagonal zigzag</label>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Trace</div>
+    <div class="field">
+      <label>Line spacing <span id="lbl-spacing">5</span> lines</label>
+      <input type="range" id="inp-spacing" min="2" max="20" step="1" value="5">
+    </div>
+    <div class="field">
+      <label>Trace length <span id="lbl-tracelen">—</span></label>
+    </div>
+    <div class="readout-row" style="font-size:11px;color:#8b949e;margin-top:-6px;">
+      Estimated trace per pixel (from spacing &amp; area)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" style="font-size:13px; color:#e6edf3; font-weight:700; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid #30363d; padding-bottom:6px;">Heater Material</div>
+    <div class="field">
+      <label>Resistance/pixel (Ω)</label>
+      <input type="number" id="inp-rpixel" min="0.1" max="10000" step="0.1" value="12.5">
+    </div>
+    <div class="field">
+      <label>Resistivity (Ω/m)</label>
+      <input type="number" id="inp-rpermeter" min="1" max="100000" step="1" value="30">
+    </div>
+    <div class="field">
+      <label>Trace length/pixel (cm)</label>
+      <input type="number" id="inp-tracecm" min="0.1" max="10000" step="0.1" value="5">
+    </div>
+    <div style="font-size:11px;color:#546e8a;margin-top:-4px;">
+      Any two fields determine the third (R = Ω/m × length)
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">View</div>
+    <div class="field" style="flex-direction:row; align-items:center; gap:8px;">
+      <input type="checkbox" id="inp-autozoom" checked style="accent-color:#f78166; width:14px; height:14px; cursor:pointer; flex-shrink:0;">
+      <label for="inp-autozoom" style="font-size:12px; color:#c9d1d9; cursor:pointer;">Auto-fit to window</label>
+    </div>
+    <div class="field" id="zoom-field" style="opacity:0.35; pointer-events:none;">
+      <label>Zoom <span id="lbl-zoom">100%</span></label>
+      <input type="range" id="inp-zoom" min="20" max="300" step="5" value="100">
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Animation</div>
+    <div class="select-group">
+      <input type="radio" name="anim" id="anim-none" value="none" checked>
+      <label for="anim-none">⬛ Static (off)</label>
+      <input type="radio" name="anim" id="anim-row" value="row">
+      <label for="anim-row">▶ Scan rows</label>
+      <input type="radio" name="anim" id="anim-col" value="col">
+      <label for="anim-col">▼ Scan columns</label>
+      <input type="radio" name="anim" id="anim-pixel" value="pixel">
+      <label for="anim-pixel">◉ Move single pixel</label>
+      <input type="radio" name="anim" id="anim-wave" value="wave">
+      <label for="anim-wave">〜 Wave (diagonal)</label>
+    </div>
+    <div class="field" style="margin-top:4px;">
+      <label>Speed <span id="lbl-speed">400</span> ms/step</label>
+      <input type="range" id="inp-speed" min="50" max="2000" step="50" value="400">
+    </div>
+    <button id="btn-play" style="
+      margin-top:6px; padding:8px 0; border-radius:6px; border:none; cursor:pointer;
+      background:#f78166; color:#0d1117; font-size:13px; font-weight:700; width:100%;
+      transition:background .15s;
+    ">▶ Play</button>
+    <button id="btn-export-pdf" style="
+      margin-top:6px; padding:8px 0; border-radius:6px; border:none; cursor:pointer;
+      background:#238636; color:#ffffff; font-size:13px; font-weight:700; width:100%;
+      transition:background .15s;
+    ">⬇ Export PDF</button>
+  </div>
+
+  <div id="readouts">
+    <div class="readout-row"><span>Grid</span><span id="r-grid">—</span></div>
+    <div class="readout-row highlight"><span>Total pixels</span><span id="r-pixels">—</span></div>
+    <hr class="readout-divider">
+    <div class="readout-row"><span>Power/pixel (at R)</span><span id="r-pactual">—</span></div>
+    <div class="readout-row"><span>Current/pixel (at R)</span><span id="r-iactual">—</span></div>
+    <div class="readout-row"><span>Full-row current (all cols)</span><span id="r-rowcur">—</span></div>
+    <hr class="readout-divider">
+    <div class="readout-row"><span>Power/pixel (min)</span><span id="r-pmin">—</span></div>
+    <div class="readout-row"><span>Power/pixel (max)</span><span id="r-pmax">—</span></div>
+    <div class="readout-row"><span>Resistance range</span><span id="r-res">—</span></div>
+    <div class="readout-row"><span>Current range</span><span id="r-cur">—</span></div>
+    <hr class="readout-divider">
+    <div class="readout-row"><span>MOSFETs</span><span id="r-mosfet">—</span></div>
+    <hr class="readout-divider">
+    <div class="readout-row"><span>Row bands</span><span id="r-rowband">—</span></div>
+    <div class="readout-row"><span>Col bands</span><span id="r-colband">—</span></div>
+    <div class="readout-row highlight"><span>Total copper (+ 10%)</span><span id="r-total">—</span></div>
+    <div class="readout-row"><span>Row AWG</span><span id="r-awg">—</span></div>
+    <div class="readout-row"><span>Max copper R/row (total)</span><span id="r-maxcopper-r">—</span></div>
+    <div class="readout-row"><span>Max copper Ω/m (row)</span><span id="r-maxcopper-rm">—</span></div>
+    <div class="readout-row"><span>Max copper R/col (total)</span><span id="r-maxcopper-c">—</span></div>
+    <div class="readout-row"><span>Max copper Ω/m (col)</span><span id="r-maxcopper-cm">—</span></div>
+    <hr class="readout-divider">
+    <div class="readout-row"><span>Trace/pixel</span><span id="r-tracelen">—</span></div>
+    <div class="readout-row"><span>Total trace (all pixels)</span><span id="r-tracetotal">—</span></div>
+  </div>
+</div>
+
+<!-- ═══ SVG VIEWPORT ═══ -->
+<div id="viewport">
+  <svg id="main-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const state = {
+  jacketW: 51.2,  // cm  (16 × √10 ≈ 50.6, rounded to nearest pixel boundary)
+  jacketH: 51.2,  // cm
+  pixelSize: 16, // cm²
+  voltage: 12,
+  tMin: 40,
+  tMax: 70,
+  pattern: 'lr',
+  spacing: 5,    // number of trace lines per pixel
+  zoom: 100,
+  anim: 'none',
+  animSpeed: 400,
+  rPixel: 12.5,    // Ω per heater pixel
+  rPerMeter: 30,   // Ω/m — zinc yarn typical (~20–50 Ω/m depending on product)
+  autoZoom: true,  // fit design to viewport
+};
+
+// Animation runtime
+const animState = {
+  running: false,
+  timer: null,
+  step: 0,
+  activePixels: new Set(), // set of "r,c" strings
+};
+
+// ── Physics ────────────────────────────────────────────────────────────────
+const H = 12.5;   // natural convection W/m²K
+const AMBIENT = 21;
+const PX_SCALE = 8; // SVG px per cm
+
+function power(tempC, areaCm2) {
+  return H * (areaCm2 * 1e-4) * (tempC - AMBIENT);
+}
+function resistance(tempC, areaCm2, voltage) {
+  const p = power(tempC, areaCm2);
+  return p > 0 ? (voltage * voltage) / p : Infinity;
+}
+function current(tempC, areaCm2, voltage) {
+  const r = resistance(tempC, areaCm2, voltage);
+  return r > 0 ? voltage / r : 0;
+}
+function fmt(v, dec=2) { return v.toFixed(dec); }
+function fmtR(r) {
+  return r >= 1000 ? fmt(r/1000,2) + ' kΩ' : fmt(r,0) + ' Ω';
+}
+function fmtI(i) {
+  return i >= 1 ? fmt(i,1) + ' A' : fmt(i*1000,1) + ' mA';
+}
+function awgForCurrent(mA) {
+  if (mA < 100) return '28–30 AWG';
+  if (mA < 200) return '26–28 AWG';
+  if (mA < 400) return '24–26 AWG';
+  if (mA < 700) return '22–24 AWG';
+  return '20–22 AWG';
+}
+
+// ── Grid computation ───────────────────────────────────────────────────────
+function computeGrid(s) {
+  const side = Math.sqrt(s.pixelSize); // cm per pixel side
+  const cols = Math.max(1, Math.floor(s.jacketW / side));
+  const rows = Math.max(1, Math.floor(s.jacketH / side));
+  return { cols, rows, side };
+}
+
+// ── Update readouts ────────────────────────────────────────────────────────
+function updateReadouts(s) {
+  const { cols, rows } = computeGrid(s);
+  const pixels = cols * rows;
+  const pmin = power(s.tMin, s.pixelSize);
+  const pmax = power(s.tMax, s.pixelSize);
+  const rmin = resistance(s.tMax, s.pixelSize, s.voltage);
+  const rmax = resistance(s.tMin, s.pixelSize, s.voltage);
+  const imin = current(s.tMin, s.pixelSize, s.voltage);
+  const imax = current(s.tMax, s.pixelSize, s.voltage);
+  const rowBandM = rows * ((s.jacketW + 10) / 100);
+  const colBandM = cols * ((s.jacketH + 10) / 100);
+  const totalM = (rowBandM + colBandM) * 1.1;
+  const maxRowCurrent = cols * imax * 1000; // mA
+
+  // Actual power/current from configured resistance
+  const pActual = s.rPixel > 0 ? (s.voltage * s.voltage) / s.rPixel : 0;
+  const iActual = s.rPixel > 0 ? s.voltage / s.rPixel : 0;
+  const fullRowCurrent = iActual * cols;
+
+  // Trace length from R and Ω/m
+  const traceLenM = s.rPerMeter > 0 ? s.rPixel / s.rPerMeter : 0;
+  const traceLenCm = traceLenM * 100;
+  const traceTotalM = traceLenM * pixels;
+
+  document.getElementById('r-grid').textContent = `${cols} × ${rows}`;
+  document.getElementById('r-pixels').textContent = pixels;
+  document.getElementById('r-pactual').textContent = `${fmt(pActual,2)} W`;
+  document.getElementById('r-iactual').textContent = fmtI(iActual);
+  document.getElementById('r-rowcur').textContent = fmtI(fullRowCurrent);
+  document.getElementById('r-pmin').textContent = `${fmt(pmin,3)} W`;
+  document.getElementById('r-pmax').textContent = `${fmt(pmax,3)} W`;
+  document.getElementById('r-res').textContent = `${fmtR(rmin)} – ${fmtR(rmax)}`;
+  document.getElementById('r-cur').textContent = `${fmtI(imin)} – ${fmtI(imax)}`;
+  document.getElementById('r-mosfet').textContent = `${rows} rows + ${cols} cols = ${rows+cols}`;
+  document.getElementById('r-rowband').textContent = `${rows} × ${fmt((s.jacketW+10)/100,2)} m = ${fmt(rowBandM,2)} m`;
+  document.getElementById('r-colband').textContent = `${cols} × ${fmt((s.jacketH+10)/100,2)} m = ${fmt(colBandM,2)} m`;
+  document.getElementById('r-total').textContent = `${fmt(totalM,1)} m`;
+  document.getElementById('r-awg').textContent = awgForCurrent(maxRowCurrent);
+
+  // Max copper yarn R so it doesn't heat noticeably:
+  // P_yarn = I² × R_yarn ≤ 5% of pixel power  →  R_yarn ≤ 0.05 × R_pixel
+  // Row trace spans jacket width; col trace spans jacket height.
+  const maxCopperR   = s.rPixel > 0 ? 0.05 * s.rPixel : 0;
+  const rowLenM      = s.jacketW / 100;
+  const colLenM      = s.jacketH / 100;
+  const maxRowOhmM   = rowLenM > 0 ? maxCopperR / rowLenM : 0;
+  const maxColOhmM   = colLenM > 0 ? maxCopperR / colLenM : 0;
+  document.getElementById('r-maxcopper-r').textContent  = `≤ ${fmt(maxCopperR, 2)} Ω`;
+  document.getElementById('r-maxcopper-rm').textContent = `≤ ${fmt(maxRowOhmM, 2)} Ω/m`;
+  document.getElementById('r-maxcopper-c').textContent  = `≤ ${fmt(maxCopperR, 2)} Ω`;
+  document.getElementById('r-maxcopper-cm').textContent = `≤ ${fmt(maxColOhmM, 2)} Ω/m`;
+  document.getElementById('r-tracelen').textContent = `${fmt(traceLenCm,1)} cm`;
+  document.getElementById('r-tracetotal').textContent = `${fmt(traceTotalM,1)} m`;
+  document.getElementById('lbl-tracelen').textContent = `${fmt(traceLenCm,1)} cm`;
+}
+
+// ── SVG helpers ────────────────────────────────────────────────────────────
+const SVG_NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+// ── Meander path generators ────────────────────────────────────────────────
+// rect = {x, y, w, h} — pixel bounding box in SVG px
+// colX = left edge of pixel (col thread runs here) = rect.x
+// rowY = bottom edge of pixel (row thread runs here) = rect.y + rect.h
+// colJoint: point on left border where meander starts (touches col thread)
+// rowJoint: point on bottom border where meander ends (touches row thread)
+// No stubs — meander begins/ends exactly on the border edges, zero crossings.
+
+function meanderLR(rect, lines, colX, rowY) {
+  const { x, y, w, h } = rect;
+  const m = w * 0.10;
+  const ix = x + m, iy = y + m, iw = w - 2*m, ih = h - 2*m;
+  const n = Math.max(2, lines);
+  const step = ih / (n - 1);
+  // boustrophedon rows; first row always starts at left (ix)
+  let pts = [];
+  for (let i = 0; i < n; i++) {
+    const yy = iy + i * step;
+    if (i % 2 === 0) { pts.push([ix, yy]); pts.push([ix + iw, yy]); }
+    else              { pts.push([ix + iw, yy]); pts.push([ix, yy]); }
+  }
+  // deduplicate
+  pts = pts.filter((p, i) => i === 0 || p[0] !== pts[i-1][0] || p[1] !== pts[i-1][1]);
+  // colJoint: left border at height of first inner line
+  const colJoint = [x, pts[0][1]];
+  // rowJoint: bottom border below last inner point
+  const lastPt = pts[pts.length - 1];
+  const rowJoint = [lastPt[0], y + h];
+  // meander: enters from left border (ix = x+m, same y as colJoint), boustrophedon, exits to bottom border
+  let d = `M ${x} ${colJoint[1]} L ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i][0]} ${pts[i][1]}`;
+  d += ` L ${lastPt[0]} ${y + h}`;
+  return { meander: d, colJoint, rowJoint };
+}
+
+function meanderTB(rect, lines, colX, rowY) {
+  const { x, y, w, h } = rect;
+  const m = w * 0.10;
+  const ix = x + m, iy = y + m, iw = w - 2*m, ih = h - 2*m;
+  const n = Math.max(2, lines);
+  const step = iw / (n - 1);
+  let pts = [];
+  for (let i = 0; i < n; i++) {
+    const xx = ix + i * step;
+    if (i % 2 === 0) { pts.push([xx, iy]); pts.push([xx, iy + ih]); }
+    else              { pts.push([xx, iy + ih]); pts.push([xx, iy]); }
+  }
+  pts = pts.filter((p, i) => i === 0 || p[0] !== pts[i-1][0] || p[1] !== pts[i-1][1]);
+  // colJoint: left border at y = iy (top of inner area, first column starts here)
+  const colJoint = [x, iy];
+  const lastPt = pts[pts.length - 1];
+  const rowJoint = [lastPt[0], y + h];
+  // enter from left border at iy, go to first column top, run boustrophedon, exit bottom
+  let d = `M ${x} ${iy} L ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i][0]} ${pts[i][1]}`;
+  d += ` L ${lastPt[0]} ${y + h}`;
+  return { meander: d, colJoint, rowJoint };
+}
+
+function meanderSpiral(rect, lines, colX, rowY) {
+  const { x, y, w, h } = rect;
+  const m = w * 0.10;
+  const spacing = Math.min(w, h) / (2 * Math.max(2, lines) + 1);
+  let pts = [];
+  let left = x + m, top = y + m, right = x + w - m, bottom = y + h - m;
+  let first = true;
+  while (right - left > spacing * 1.2 && bottom - top > spacing * 1.2) {
+    if (first) { pts.push([left, top]); first = false; }
+    pts.push([right, top]);
+    pts.push([right, bottom]);
+    pts.push([left + spacing, bottom]);
+    pts.push([left + spacing, top + spacing]);
+    left += spacing; top += spacing; right -= spacing; bottom -= spacing;
+  }
+  if (pts.length === 0) pts = [[x+m, y+m], [x+w-m, y+h-m]];
+  const innerCx = (left + right) / 2, innerCy = (top + bottom) / 2;
+  pts.push([innerCx, innerCy]);
+  // colJoint: left border at height of spiral start
+  const colJoint = [x, pts[0][1]];
+  const rowJoint = [innerCx, y + h];
+  let d = `M ${x} ${colJoint[1]} L ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i][0]} ${pts[i][1]}`;
+  d += ` L ${innerCx} ${y + h}`;
+  return { meander: d, colJoint, rowJoint };
+}
+
+function meanderCircle(rect, lines, colX, rowY) {
+  const { x, y, w, h } = rect;
+  const cx = x + w / 2, cy = y + h / 2;
+  const maxR = Math.min(w, h) / 2 - w * 0.10;
+  const rings = Math.max(1, lines);
+  const spacing = maxR / rings;
+  // outermost ring top point = entry from left border
+  const outerTopY = cy - rings * spacing;
+  let d = `M ${x} ${outerTopY} L ${cx} ${outerTopY}`;
+  for (let i = rings; i >= 1; i--) {
+    const r = i * spacing;
+    const n = Math.max(16, Math.round(2 * Math.PI * r / 3));
+    let first = true;
+    for (let j = 0; j <= n; j++) {
+      const angle = (j / n) * 2 * Math.PI - Math.PI / 2;
+      const px2 = cx + r * Math.cos(angle), py2 = cy + r * Math.sin(angle);
+      d += first ? ` M ${px2} ${py2}` : ` L ${px2} ${py2}`;
+      first = false;
+    }
+    if (i > 1) d += ` L ${cx} ${cy - (i-1) * spacing}`;
+  }
+  d += ` L ${cx} ${cy} L ${cx} ${y + h}`;
+  const colJoint = [x, outerTopY];
+  const rowJoint = [cx, y + h];
+  return { meander: d, colJoint, rowJoint };
+}
+
+function meanderDiag(rect, lines, colX, rowY) {
+  const { x, y, w, h } = rect;
+  const m = w * 0.10;
+  const ix = x + m, iy = y + m, iw = w - 2*m, ih = h - 2*m;
+  const n = Math.max(2, lines) * 2;
+  let pts = [[ix, iy]];
+  for (let i = 1; i <= n; i++) {
+    const t = i / n;
+    const even = (i % 2 === 0);
+    if (even) pts.push([ix + iw * (1 - t * 0.5), iy + ih * t]);
+    else      pts.push([ix + iw * (t * 0.5), iy + ih * t]);
+  }
+  const colJoint = [x, pts[0][1]];
+  const lastPt = pts[pts.length - 1];
+  const rowJoint = [lastPt[0], y + h];
+  let d = `M ${x} ${colJoint[1]} L ${pts[0][0]} ${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) d += ` L ${pts[i][0]} ${pts[i][1]}`;
+  d += ` L ${lastPt[0]} ${y + h}`;
+  return { meander: d, colJoint, rowJoint };
+}
+
+function getMeander(pattern, rect, lines, bandW, colX, rowY) {
+  switch (pattern) {
+    case 'tb':     return meanderTB(rect, lines, colX, rowY);
+    case 'spiral': return meanderSpiral(rect, lines, colX, rowY);
+    case 'circle': return meanderCircle(rect, lines, colX, rowY);
+    case 'diag':   return meanderDiag(rect, lines, colX, rowY);
+    default:       return meanderLR(rect, lines, colX, rowY);
+  }
+}
+
+// ── Geometric trace length estimate per pixel ──────────────────────────────
+// Returns approximate path length in cm for the configured pattern.
+function computeTraceLengthCm(pattern, pixelSizeCm2, lines) {
+  const side = Math.sqrt(pixelSizeCm2);
+  const margin = side * 0.10 * 2; // both sides
+  const inner = side - margin;
+  const n = Math.max(2, lines);
+
+  switch (pattern) {
+    case 'tb': {
+      // n vertical columns spanning inner height, connected at top/bottom
+      const runLen = n * inner;                   // vertical runs
+      const turns  = (n - 1) * (inner / (n - 1)); // horizontal connections = inner width
+      return runLen + turns;
+    }
+    case 'spiral': {
+      // Rectangular spiral: perimeter shrinks each loop
+      // approx: sum of perimeters of nested rectangles
+      const spacing = inner / (2 * n + 1);
+      let total = 0;
+      for (let i = 0; i < n; i++) {
+        const w = inner - i * 2 * spacing;
+        const h = inner - i * 2 * spacing;
+        if (w > 0 && h > 0) total += 2 * (w + h);
+      }
+      return total;
+    }
+    case 'circle': {
+      // Concentric circles: sum of circumferences
+      const maxR = inner / 2;
+      const ringSpacing = maxR / n;
+      let total = 0;
+      for (let i = 1; i <= n; i++) total += 2 * Math.PI * i * ringSpacing;
+      return total;
+    }
+    case 'diag': {
+      // Diagonal zigzag: n*2 diagonal segments spanning the inner area
+      const segLen = Math.sqrt((inner * 0.5) ** 2 + (inner / (n * 2)) ** 2);
+      return segLen * n * 2;
+    }
+    default: {
+      // Snake horizontal (lr): n rows spanning inner width, connected at sides
+      const runLen = n * inner;
+      const turns  = (n - 1) * (inner / (n - 1));
+      return runLen + turns;
+    }
+  }
+}
+
+// ── SVG render ─────────────────────────────────────────────────────────────
+function renderSVG(s) {
+  const svg = document.getElementById('main-svg');
+  svg.innerHTML = '';
+
+  const { cols, rows, side } = computeGrid(s);
+
+  const pixW = side * PX_SCALE;
+  const pixH = side * PX_SCALE;
+
+  const THREAD_W = Math.max(2, pixW * 0.022);  // copper thread stroke
+  const LABEL_L  = 52;
+  const LABEL_T  = 38;
+  const TAIL     = 20;
+
+  const totalW = cols * pixW;
+  const totalH = rows * pixH;
+  const OX = LABEL_L, OY = LABEL_T;
+
+  // Connector landing zone: all (rows+cols) traces packed side-by-side at bottom-right
+  // Each trace has a fully independent path — no shared segments.
+  const CONN_PITCH_EST = Math.max(THREAD_W * 4, pixW * 0.18);
+  const LBL_FS_EST     = Math.max(6, THREAD_W * 3.2);
+  // Strip extends rows*CONN_PITCH right of gridR (transistors + row pins)
+  const naturalW       = OX + totalW + rows * CONN_PITCH_EST + LBL_FS_EST * 2 + 20;
+
+  // Bend zone: (rows+cols) unique horizontal levels at BEND_STEP each
+  // STRAND_W defined below at line ~752; replicate formula here for sizing estimate
+  const STRAND_W_EST   = Math.max(0.8, Math.max(2, pixW * 0.022) * 0.38);
+  const BEND_STEP_EST  = Math.max(STRAND_W_EST * 6, CONN_PITCH_EST * 0.35);
+  const bendZoneH_EST  = cols * BEND_STEP_EST;
+  const connY_EST      = bendZoneH_EST + CONN_PITCH_EST;
+  const CONN_TAIL_EST  = Math.max(10, CONN_PITCH_EST * 1.5);
+  const LEG_H_EST      = LBL_FS_EST + 20;
+  const naturalH       = OY + totalH + connY_EST + CONN_TAIL_EST + LBL_FS_EST + LEG_H_EST + 20;
+
+  let zoom;
+  if (s.autoZoom) {
+    const vp = document.getElementById('viewport');
+    const vpW = vp.clientWidth  - 40;  // 20px padding each side
+    const vpH = vp.clientHeight - 40;
+    zoom = Math.min(vpW / naturalW, vpH / naturalH, 4);
+    // reflect back to slider label (don't update state.zoom to avoid feedback loop)
+    const pct = Math.round(zoom * 100);
+    document.getElementById('lbl-zoom').textContent = `${pct}% (auto)`;
+    document.getElementById('inp-zoom').value = pct;
+  } else {
+    zoom = s.zoom / 100;
+  }
+
+  const svgW = naturalW * zoom;
+  const svgH = naturalH * zoom;
+  svg.setAttribute('width',  svgW);
+  svg.setAttribute('height', svgH);
+  svg.setAttribute('viewBox', `0 0 ${naturalW} ${naturalH}`);
+
+  // ── defs ──
+  const defs = el('defs', {}, svg);
+  const fp = el('pattern', { id:'fabric', x:0, y:0, width:8, height:8, patternUnits:'userSpaceOnUse' }, defs);
+  el('rect', { width:8, height:8, fill:'#2a2340' }, fp);
+  el('line', { x1:0, y1:8, x2:8, y2:0, stroke:'#332b50', 'stroke-width':'0.8' }, fp);
+  el('line', { x1:-2, y1:2, x2:2, y2:-2, stroke:'#332b50', 'stroke-width':'0.8' }, fp);
+  el('line', { x1:6, y1:10, x2:10, y2:6, stroke:'#332b50', 'stroke-width':'0.8' }, fp);
+
+  // ── fabric background ──
+  el('rect', { x: OX, y: OY, width: totalW, height: totalH,
+    rx:4, fill:'url(#fabric)', stroke:'#4a3a6a', 'stroke-width':'1' }, svg);
+
+  // ── Coordinate model ──────────────────────────────────────────────────────
+  //    Col thread c: x = OX + c * pixW  (left edge of col)
+  //    Row thread r: y = OY + r * pixH + pixH  (bottom edge of row)
+
+  const colThreadX = Array.from({length: cols}, (_, c) => OX + c * pixW);
+  const rowThreadY = Array.from({length: rows}, (_, r) => OY + r * pixH + pixH);
+
+  // Grid corners
+  const gridR = OX + totalW;
+  const gridB = OY + totalH;
+
+  // Active state helpers
+  function colActive(c) {
+    return animState.activePixels.size > 0
+      ? [...animState.activePixels].some(k => +k.split(',')[1] === c)
+      : c === 0;
+  }
+  function rowActive(r) {
+    return animState.activePixels.size > 0
+      ? [...animState.activePixels].some(k => +k.split(',')[0] === r)
+      : r === 0;
+  }
+
+  // Copper bundle styling
+  const N_STRANDS  = 3;
+  const STRAND_W   = Math.max(0.8, THREAD_W * 0.38);
+  const STRAND_GAP = THREAD_W * 0.55;
+  const strandOffsets = Array.from({length: N_STRANDS}, (_, i) =>
+    (i - (N_STRANDS - 1) / 2) * STRAND_GAP);
+
+  const GAP = THREAD_W * 1.8;
+  const DIP = THREAD_W * 2.0;
+
+  // Col thread: vertical run through grid only (tail drawn separately after connector layout)
+  function drawColStrand(cx, off, active, breakYs) {
+    const sx = cx + off;
+    const mc = active ? '#c87830' : '#6a3a18';
+    const dash = `${STRAND_W*2.5},${STRAND_W*1.5}`;
+    let segTop = OY - TAIL;
+    for (const by of breakYs) {
+      if (by - GAP > segTop)
+        el('line', { x1:sx, y1:segTop, x2:sx, y2:by - GAP,
+          stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round',
+          'stroke-dasharray':dash }, svg);
+      el('path', {
+        d:`M ${sx} ${by-GAP} C ${sx+DIP} ${by-GAP}, ${sx+DIP} ${by+GAP}, ${sx} ${by+GAP}`,
+        fill:'none', stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round',
+        'stroke-dasharray':dash
+      }, svg);
+      segTop = by + GAP;
+    }
+    if (segTop < gridB)
+      el('line', { x1:sx, y1:segTop, x2:sx, y2:gridB,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round',
+        'stroke-dasharray':dash }, svg);
+  }
+
+  // Row thread: horizontal run through grid only (stub to transistor drawn in connector section)
+  function drawRowStrand(ry, off, active) {
+    const sy = ry + off;
+    const mc = active ? '#c87830' : '#6a3a18';
+    const dash = `${STRAND_W*2.5},${STRAND_W*1.5}`;
+    el('line', { x1:OX, y1:sy, x2:gridR, y2:sy,
+      stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round',
+      'stroke-dasharray':dash }, svg);
+  }
+
+  // ── Col threads ──
+  for (let c = 0; c < cols; c++) {
+    const cx = colThreadX[c];
+    const active = colActive(c);
+    const breakYs = rowThreadY.slice().sort((a, b) => a - b);
+    for (const off of strandOffsets) drawColStrand(cx, off, active, breakYs);
+    const fs = Math.max(7, THREAD_W * 4);
+    const lbl = el('text', { x: cx + THREAD_W + 3, y: OY - TAIL + 2,
+      fill: active ? '#ffcc02' : '#c08040', 'font-size': fs, 'font-family':'sans-serif',
+      'font-weight': active ? 'bold' : 'normal', 'dominant-baseline':'hanging' }, svg);
+    lbl.textContent = `c${c+1}`;
+    const sub = el('text', { x: cx + THREAD_W + 3, y: OY - TAIL + 2 + fs + 1,
+      fill: active ? '#ffcc02' : '#546e8a', 'font-size': Math.max(6, fs * 0.85),
+      'font-family':'sans-serif', 'dominant-baseline':'hanging' }, svg);
+    sub.textContent = active ? 'GND' : 'float';
+  }
+
+  // ── Row threads ──
+  for (let r = 0; r < rows; r++) {
+    const ry = rowThreadY[r];
+    const active = rowActive(r);
+    for (const off of strandOffsets) drawRowStrand(ry, off, active);
+    const fs = Math.max(7, THREAD_W * 4);
+    const lbl = el('text', { x: OX - 4, y: ry - THREAD_W - 2,
+      'text-anchor':'end', fill: active ? '#ffcc02' : '#c08040',
+      'font-size': fs, 'font-family':'sans-serif', 'dominant-baseline':'auto',
+      'font-weight': active ? 'bold' : 'normal' }, svg);
+    lbl.textContent = `r${r+1}`;
+  }
+
+  // ── Connector landing zone ────────────────────────────────────────────────
+  // All row + col traces land as a compact parallel strip at bottom-right.
+  // Every trace has a fully independent path — no segment is shared with any other.
+  //
+  // Each trace: exit point → vertical/horizontal to a unique bend → straight to pin.
+  // Bend Y values are assigned so horizontal segments are at distinct depths.
+  //
+  // Pin order left→right:  R1 … Rrows  C1 … Ccols
+  // Right edge of strip = gridR (so rightmost col pin aligns with grid right edge)
+
+  const CONN_PITCH = Math.max(THREAD_W * 4, pixW * 0.18);
+  const LBL_FS     = Math.max(6, THREAD_W * 3.2);
+
+  // Pin strip left→right: C1…Ccols  R1…Rrows
+  // Col exits are on the LEFT of the grid; row exits on the RIGHT.
+  // Keeping col pins left of row pins avoids the two groups crossing each other.
+  const ROW_TR_PITCH     = CONN_PITCH;
+  const connStripRightX  = gridR + ROW_TR_PITCH * rows;
+  const pinX = Array.from({length: cols + rows}, (_, i) =>
+    connStripRightX - (cols + rows - 1 - i) * CONN_PITCH
+  );
+  const colPinX = c => pinX[c];
+  const rowPinX = r => pinX[cols + (rows - 1 - r)];
+
+  // Shared connector Y where all stubs land
+  const BEND_STEP = Math.max(STRAND_W * 6, CONN_PITCH * 0.35);
+  const connY     = gridB + cols * BEND_STEP + CONN_PITCH;
+  const CONN_TAIL = Math.max(10, CONN_PITCH * 1.5);
+
+  // ── Row traces ───────────────────────────────────────────────────────────
+  // Row r exits horizontally from gridR to its pin X, then drops straight to connY.
+  //
+  // Bend depth rule (crossing-free):
+  //   The vertical drop from pinX(r) to connY must not pass through any other
+  //   row's horizontal. Assign the DEEPEST bend to the row with the LEFTMOST pin
+  //   (row 0), shallowest to row rows-1.
+  //   Then: row r' < r has pinX(r') < pinX(r) and deeper bend.
+  //   The vertical of row r at pinX(r) is always to the RIGHT of row r''s horizontal
+  //   endpoint pinX(r'), so it never intersects row r''s horizontal. ✓
+
+  for (let r = 0; r < rows; r++) {
+    const ry     = rowThreadY[r];
+    const active = rowActive(r);
+    const mc     = active ? '#c87830' : '#6a3a18';
+    const dash   = `${STRAND_W*2.5},${STRAND_W*1.5}`;
+    const px     = rowPinX(r);
+
+    for (const off of strandOffsets) {
+      el('line', { x1:gridR+off, y1:ry+off, x2:px+off, y2:ry+off,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round', 'stroke-dasharray':dash }, svg);
+      el('line', { x1:px+off, y1:ry,    x2:px+off, y2:connY,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round', 'stroke-dasharray':dash }, svg);
+      // Stub
+      el('line', { x1:px+off, y1:connY, x2:px+off, y2:connY+CONN_TAIL,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round' }, svg);
+    }
+    const lt = el('text', { x:px, y:connY+CONN_TAIL+2,
+      fill: active ? '#f78166':'#6a8898', 'font-size':LBL_FS, 'font-family':'monospace',
+      'text-anchor':'middle', 'dominant-baseline':'hanging',
+      transform:`rotate(-90,${px},${connY+CONN_TAIL+2})` }, svg);
+    lt.textContent = `R${r+1}`;
+  }
+
+  // ── Col traces ───────────────────────────────────────────────────────────
+  // Col c exits at colThreadX[c] (increases with c) and lands at colPinX(c)
+  // (also increases with c).
+  //
+  // Bend depth rule (crossing-free):
+  //   Deepest bend → leftmost pin (col 0); shallowest → rightmost pin (col cols-1).
+  //   Vertical drop of col c at pinX(c): all cols c' < c have deeper bends and
+  //   pinX(c') < pinX(c), so their horizontals end to the LEFT of pinX(c). ✓
+  //   All cols c' > c have shallower bends, so their horizontals are above the
+  //   vertical's starting point. ✓  No crossings.
+
+  for (let c = 0; c < cols; c++) {
+    const cx     = colThreadX[c];
+    const active = colActive(c);
+    const mc     = active ? '#c87830' : '#6a3a18';
+    const dash   = `${STRAND_W*2.5},${STRAND_W*1.5}`;
+    const px     = colPinX(c);
+
+    // Col 0 → deepest bend; col cols-1 → shallowest
+    const by = gridB + (cols - c) * BEND_STEP;
+
+    for (const off of strandOffsets) {
+      el('line', { x1:cx+off, y1:gridB,  x2:cx+off, y2:by,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round', 'stroke-dasharray':dash }, svg);
+      el('line', { x1:cx+off, y1:by+off, x2:px+off, y2:by+off,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round', 'stroke-dasharray':dash }, svg);
+      el('line', { x1:px+off, y1:by+off, x2:px+off, y2:connY,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round', 'stroke-dasharray':dash }, svg);
+      el('line', { x1:px+off, y1:connY,  x2:px+off, y2:connY+CONN_TAIL,
+        stroke:mc, 'stroke-width':STRAND_W, 'stroke-linecap':'round' }, svg);
+    }
+    const lt = el('text', { x:px, y:connY+CONN_TAIL+2,
+      fill: active ? '#79c0ff':'#4a6878', 'font-size':LBL_FS, 'font-family':'monospace',
+      'text-anchor':'middle', 'dominant-baseline':'hanging',
+      transform:`rotate(-90,${px},${connY+CONN_TAIL+2})` }, svg);
+    lt.textContent = `C${c+1}`;
+  }
+
+  // Connector pad line
+  el('line', {
+    x1: pinX[0] - CONN_PITCH*0.5, y1: connY,
+    x2: pinX[cols+rows-1] + CONN_PITCH*0.5, y2: connY,
+    stroke:'#58a6ff', 'stroke-width':Math.max(1, CONN_PITCH*0.12),
+    'stroke-linecap':'round', opacity:'0.4'
+  }, svg);
+
+  // ── Heat pixel meanders ──
+  // For pixel (r,c): occupies rect [OX + c*pixW, OY + r*pixH, pixW, pixH]
+  //   colThreadX[c] runs along its LEFT border  → colJoint is on the left border
+  //   rowThreadY[r] runs along its BOTTOM border → rowJoint is on the bottom border
+  //   Meander lives strictly inside (margin), starts at colJoint, ends at rowJoint
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const active = animState.activePixels.size > 0
+        ? animState.activePixels.has(`${r},${c}`)
+        : (r === 0 && c === 0);
+
+      const px = OX + c * pixW;
+      const py = OY + r * pixH;
+      const rect = { x: px, y: py, w: pixW, h: pixH };
+
+      const { meander, colJoint, rowJoint } =
+        getMeander(s.pattern, rect, s.spacing, 0, colThreadX[c], rowThreadY[r]);
+
+      const traceW = Math.max(1, pixW * 0.022);
+
+      // Zinc resistive meander
+      el('path', { d: meander, fill:'none',
+        stroke: active ? '#ff8c00' : '#3a5a6a',
+        'stroke-width': traceW,
+        'stroke-linecap':'round', 'stroke-linejoin':'round',
+        'stroke-dasharray': active ? 'none' : `${traceW*2},${traceW*1.2}` }, svg);
+
+    }
+  }
+
+  // ── Legend ── (placed below connector labels)
+  const LY = connY + CONN_TAIL + LBL_FS + 18;
+  const LX = OX;
+  const fs = Math.max(7, THREAD_W * 3.5);
+  const tw = Math.max(1.5, THREAD_W);
+
+  el('line', { x1:LX, y1:LY, x2:LX+18, y2:LY,
+    stroke:'#c06820', 'stroke-width': tw, 'stroke-linecap':'round' }, svg);
+  const lt1 = el('text', { x:LX+22, y:LY+1, fill:'#c08040', 'font-size':fs, 'font-family':'sans-serif', 'dominant-baseline':'middle' }, svg);
+  lt1.textContent = 'Copper yarn (stitched, no heat)';
+
+  const zx = LX + 200;
+  const ztw = Math.max(0.8, THREAD_W * 0.6);
+  el('line', { x1:zx, y1:LY, x2:zx+18, y2:LY, stroke:'#3a5a6a', 'stroke-width': ztw, 'stroke-dasharray':'3,2', 'stroke-linecap':'round' }, svg);
+  const lt2 = el('text', { x:zx+22, y:LY+1, fill:'#3a5a6a', 'font-size':fs, 'font-family':'sans-serif', 'dominant-baseline':'middle' }, svg);
+  lt2.textContent = 'Zinc resistive meander (heats up)';
+
+}
+
+// ── Wire up controls ───────────────────────────────────────────────────────
+function bindRange(id, lblId, key, transform) {
+  const inp = document.getElementById(id);
+  const lbl = document.getElementById(lblId);
+  inp.addEventListener('input', () => {
+    const v = transform ? transform(+inp.value) : +inp.value;
+    state[key] = v;
+    lbl.textContent = inp.value + (id.includes('zoom') ? '%' : '');
+    render();
+  });
+}
+
+bindRange('inp-w',    'lbl-w',    'jacketW');
+bindRange('inp-h',    'lbl-h',    'jacketH');
+bindRange('inp-psize','lbl-psize','pixelSize');
+document.getElementById('inp-psize').addEventListener('input', syncGeometryToMaterial);
+
+// Pixel side ↔ area sync (square: area = side²)
+document.getElementById('inp-pside').addEventListener('input', function() {
+  const side = +this.value;
+  const area = Math.round(side * side * 10) / 10;
+  state.pixelSize = area;
+  document.getElementById('inp-psize').value = area;
+  document.getElementById('lbl-psize').textContent = area;
+  document.getElementById('lbl-pside').textContent = side;
+  updatePixelCountFields();
+  syncGeometryToMaterial();
+});
+document.getElementById('inp-psize').addEventListener('input', function() {
+  const side = Math.round(Math.sqrt(+this.value) * 10) / 10;
+  document.getElementById('inp-pside').value = side;
+  document.getElementById('lbl-pside').textContent = side;
+  updatePixelCountFields();
+});
+
+// Initialize side label
+document.getElementById('lbl-pside').textContent = Math.round(Math.sqrt(state.pixelSize) * 10) / 10;
+document.getElementById('inp-pside').value = Math.round(Math.sqrt(state.pixelSize) * 10) / 10;
+
+// ── Pixel count ↔ cm sync ──────────────────────────────────────────────────
+function pixelSide() { return Math.sqrt(state.pixelSize); }
+
+function updatePixelCountFields() {
+  const { cols, rows } = computeGrid(state);
+  document.getElementById('inp-cols').value = cols;
+  document.getElementById('inp-rows').value = rows;
+}
+
+// After cm sliders update state, also refresh pixel count fields
+document.getElementById('inp-w').addEventListener('input', updatePixelCountFields);
+document.getElementById('inp-h').addEventListener('input', updatePixelCountFields);
+// Also when pixel size changes, counts change
+document.getElementById('inp-psize').addEventListener('input', updatePixelCountFields);
+
+document.getElementById('inp-cols').addEventListener('input', function() {
+  const cols = Math.max(1, +this.value || 1);
+  state.jacketW = Math.round(cols * pixelSide());
+  document.getElementById('inp-w').value = state.jacketW;
+  document.getElementById('lbl-w').textContent = state.jacketW;
+  render();
+});
+document.getElementById('inp-rows').addEventListener('input', function() {
+  const rows = Math.max(1, +this.value || 1);
+  state.jacketH = Math.round(rows * pixelSide());
+  document.getElementById('inp-h').value = state.jacketH;
+  document.getElementById('lbl-h').textContent = state.jacketH;
+  render();
+});
+bindRange('inp-tmin', 'lbl-tmin', 'tMin');
+bindRange('inp-tmax', 'lbl-tmax', 'tMax');
+bindRange('inp-zoom', 'lbl-zoom', 'zoom');
+
+document.getElementById('inp-autozoom').addEventListener('change', function() {
+  state.autoZoom = this.checked;
+  const zf = document.getElementById('zoom-field');
+  zf.style.opacity = this.checked ? '0.35' : '1';
+  zf.style.pointerEvents = this.checked ? 'none' : 'auto';
+  render();
+});
+
+window.addEventListener('resize', () => { if (state.autoZoom) render(); });
+
+document.getElementById('inp-spacing').addEventListener('input', function() {
+  state.spacing = +this.value;
+  document.getElementById('lbl-spacing').textContent = this.value;
+  syncGeometryToMaterial();
+});
+
+document.getElementById('inp-speed').addEventListener('input', function() {
+  state.animSpeed = +this.value;
+  document.getElementById('lbl-speed').textContent = this.value;
+  if (animState.running) { stopAnim(); startAnim(); }
+});
+
+// tMin/tMax clamp
+document.getElementById('inp-tmin').addEventListener('input', () => {
+  if (state.tMin >= state.tMax) {
+    state.tMax = state.tMin + 1;
+    document.getElementById('inp-tmax').value = state.tMax;
+    document.getElementById('lbl-tmax').textContent = state.tMax;
+  }
+});
+document.getElementById('inp-tmax').addEventListener('input', () => {
+  if (state.tMax <= state.tMin) {
+    state.tMin = state.tMax - 1;
+    document.getElementById('inp-tmin').value = state.tMin;
+    document.getElementById('lbl-tmin').textContent = state.tMin;
+  }
+});
+
+document.querySelectorAll('input[name=voltage]').forEach(r => {
+  r.addEventListener('change', () => { state.voltage = +r.value; render(); });
+});
+document.querySelectorAll('input[name=pattern]').forEach(r => {
+  r.addEventListener('change', () => { state.pattern = r.value; syncGeometryToMaterial(); });
+});
+document.querySelectorAll('input[name=anim]').forEach(r => {
+  r.addEventListener('change', () => { state.anim = r.value; });
+});
+
+// ── Heater material: three linked inputs (R = Ω/m × length) ────────────────
+// Updating any one field recomputes the third from the other two.
+// 'geo' source means length was derived from pattern geometry → updates R.
+function syncMaterial(changed) {
+  const ri = document.getElementById('inp-rpixel');
+  const mi = document.getElementById('inp-rpermeter');
+  const li = document.getElementById('inp-tracecm');
+  if (changed === 'r') {
+    const len = +mi.value > 0 ? (+ri.value / +mi.value) * 100 : 0;
+    li.value = fmt(len, 2);
+  } else if (changed === 'm') {
+    const len = +mi.value > 0 ? (+ri.value / +mi.value) * 100 : 0;
+    li.value = fmt(len, 2);
+  } else {
+    // length changed (manual or geometry) → update R
+    const r = (+li.value / 100) * +mi.value;
+    ri.value = fmt(r, 2);
+  }
+  state.rPixel = +ri.value;
+  state.rPerMeter = +mi.value;
+  render();
+}
+
+// Update trace length from geometry and propagate to R
+function syncGeometryToMaterial() {
+  const lenCm = computeTraceLengthCm(state.pattern, state.pixelSize, state.spacing);
+  document.getElementById('inp-tracecm').value = fmt(lenCm, 2);
+  syncMaterial('l');
+}
+
+document.getElementById('inp-rpixel').addEventListener('input', () => syncMaterial('r'));
+document.getElementById('inp-rpermeter').addEventListener('input', () => syncMaterial('m'));
+document.getElementById('inp-tracecm').addEventListener('input', () => syncMaterial('l'));
+
+// Initialize: use rPixel as source of truth, back-calculate trace length
+document.getElementById('inp-rpixel').value = state.rPixel;
+syncMaterial('r');
+// Initialize pixel count fields
+updatePixelCountFields();
+
+// ── Animation engine ────────────────────────────────────────────────────────
+function animStep() {
+  const { cols, rows } = computeGrid(state);
+  const total = cols * rows;
+  animState.activePixels.clear();
+
+  switch (state.anim) {
+    case 'row': {
+      const r = animState.step % rows;
+      for (let c = 0; c < cols; c++) animState.activePixels.add(`${r},${c}`);
+      break;
+    }
+    case 'col': {
+      const c = animState.step % cols;
+      for (let r = 0; r < rows; r++) animState.activePixels.add(`${r},${c}`);
+      break;
+    }
+    case 'pixel': {
+      const idx = animState.step % total;
+      const r = Math.floor(idx / cols), c = idx % cols;
+      animState.activePixels.add(`${r},${c}`);
+      break;
+    }
+    case 'wave': {
+      // diagonal wave: activate pixels on diagonal d = r+c = step % (rows+cols-1)
+      const d = animState.step % (rows + cols - 1);
+      for (let r = 0; r < rows; r++) {
+        const c = d - r;
+        if (c >= 0 && c < cols) animState.activePixels.add(`${r},${c}`);
+      }
+      break;
+    }
+    default:
+      animState.activePixels.add('0,0');
+  }
+
+  animState.step++;
+  renderSVG(state);
+}
+
+function startAnim() {
+  if (state.anim === 'none') return;
+  animState.running = true;
+  animState.step = 0;
+  document.getElementById('btn-play').textContent = '⏹ Stop';
+  document.getElementById('btn-play').style.background = '#8b949e';
+  animStep();
+  animState.timer = setInterval(animStep, state.animSpeed);
+}
+
+function stopAnim() {
+  animState.running = false;
+  clearInterval(animState.timer);
+  animState.timer = null;
+  animState.activePixels.clear();
+  document.getElementById('btn-play').textContent = '▶ Play';
+  document.getElementById('btn-play').style.background = '#f78166';
+  render();
+}
+
+document.getElementById('btn-play').addEventListener('click', () => {
+  if (animState.running) stopAnim();
+  else startAnim();
+});
+
+function render() {
+  updateReadouts(state);
+  renderSVG(state);
+}
+
+render();
+
+// ── PDF Export ───────────────────────────────────────────────────────────────
+function exportPDF() {
+  const s = state;
+  const { cols, rows } = computeGrid(s);
+  const pixels = cols * rows;
+  const side = Math.sqrt(s.pixelSize);
+  const iActual = s.rPixel > 0 ? s.voltage / s.rPixel : 0;
+  const pActual = s.rPixel > 0 ? (s.voltage * s.voltage) / s.rPixel : 0;
+  const fullRowCurrent = iActual * cols;
+  const traceLenM = s.rPerMeter > 0 ? s.rPixel / s.rPerMeter : 0;
+  const traceLenCm = traceLenM * 100;
+
+  const svgEl = document.getElementById('main-svg');
+  const svgClone = svgEl.cloneNode(true);
+  svgClone.removeAttribute('style');
+  svgClone.setAttribute('width', '100%');
+  svgClone.setAttribute('height', 'auto');
+
+  const patternNames = { lr:'Left-right zigzag', tb:'Top-bottom zigzag', spiral:'Spiral', diag:'Diagonal' };
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Heat Pixel Matrix — Manufacturer Spec</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11pt; color: #111; background: #fff; padding: 20mm 18mm; }
+  h1 { font-size: 18pt; font-weight: 700; margin-bottom: 2mm; letter-spacing: -0.01em; }
+  h2 { font-size: 12pt; font-weight: 700; margin: 6mm 0 2mm; text-transform: uppercase; letter-spacing: 0.05em; color: #333; border-bottom: 0.5pt solid #ccc; padding-bottom: 1mm; }
+  p { line-height: 1.5; margin-bottom: 2mm; color: #222; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4mm; }
+  th { background: #111; color: #fff; text-align: left; padding: 2mm 3mm; font-size: 10pt; }
+  td { padding: 1.5mm 3mm; border-bottom: 0.5pt solid #ddd; font-size: 10pt; }
+  tr:nth-child(even) td { background: #f7f7f7; }
+  td:first-child { font-weight: 600; width: 52%; }
+  .highlight td { background: #fff8e1 !important; font-weight: 700; }
+  .drawing { margin: 6mm 0; text-align: center; }
+  .drawing svg { max-width: 100%; height: auto; background: #0d1117; border-radius: 4pt; padding: 4mm; }
+  .note { background: #fffbe6; border-left: 3pt solid #f0a000; padding: 2mm 3mm; margin: 3mm 0; font-size: 10pt; line-height: 1.5; }
+  .footer { margin-top: 10mm; font-size: 9pt; color: #888; border-top: 0.5pt solid #ddd; padding-top: 3mm; }
+  @media print {
+    body { padding: 10mm 12mm; }
+    @page { size: A4; margin: 10mm; }
+    .drawing svg { max-height: 140mm; }
+  }
+</style></head><body>
+
+<h1>Heat Pixel Matrix — Textile Heater Specification</h1>
+<p style="color:#555; font-size:10pt;">Generated ${new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'})}</p>
+
+<h2>Overview</h2>
+<p>This document specifies a resistive heat pixel matrix for integration into a smart garment. The matrix consists of <strong>${pixels} individually addressable heating elements</strong> arranged in a <strong>${cols}×${rows} grid</strong>. Each pixel is a conductive yarn spiral sewn or embroidered onto the textile substrate. Rows and columns are connected via copper conductor bands; a PCB driver multiplexes power delivery pixel-by-pixel.</p>
+
+<h2>Matrix Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Grid layout</td><td>${cols} columns × ${rows} rows = ${pixels} pixels</td></tr>
+  <tr><td>Garment area covered</td><td>${s.jacketW} cm × ${s.jacketH} cm</td></tr>
+  <tr><td>Pixel size (square)</td><td>${fmt(side,1)} cm × ${fmt(side,1)} cm = ${fmt(s.pixelSize,1)} cm²</td></tr>
+  <tr><td>Supply voltage</td><td>${s.voltage} V DC</td></tr>
+  <tr><td>Heater trace pattern</td><td>${patternNames[s.pattern] || s.pattern}</td></tr>
+  <tr><td>Trace lines per pixel</td><td>${s.spacing}</td></tr>
+  <tr><td>Trace length per pixel</td><td>${fmt(traceLenCm,1)} cm</td></tr>
+</table>
+
+<h2>Electrical Requirements per Pixel</h2>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr class="highlight"><td>Target resistance per pixel</td><td>${fmt(s.rPixel,1)} Ω</td></tr>
+  <tr><td>Heater yarn resistance</td><td>${fmt(s.rPerMeter,1)} Ω/m</td></tr>
+  <tr><td>Power per pixel (at ${s.voltage}V)</td><td>${fmt(pActual,2)} W</td></tr>
+  <tr><td>Current per pixel</td><td>${fmt(iActual*1000,0)} mA</td></tr>
+  <tr class="highlight"><td>Max current per row (all cols active)</td><td>${fmt(fullRowCurrent,2)} A</td></tr>
+  <tr><td>Operating temperature range</td><td>${s.tMin}°C – ${s.tMax}°C</td></tr>
+</table>
+
+<h2>Conductor Band Requirements</h2>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Row bands (horizontal, full width)</td><td>${rows} bands × ${fmt(s.jacketW/100 + 0.1, 2)} m each</td></tr>
+  <tr><td>Col bands (vertical, full height)</td><td>${cols} bands × ${fmt(s.jacketH/100 + 0.1, 2)} m each</td></tr>
+  <tr><td>Max current per row band</td><td>${fmt(fullRowCurrent,2)} A (full row active)</td></tr>
+  <tr><td>Max resistance per row band (≤5% pixel R)</td><td>${fmt(s.rPixel*0.05,3)} Ω total</td></tr>
+  <tr><td>Connector</td><td>32-pin FPC (0.5 mm pitch) — ${rows} row + ${cols} col lines</td></tr>
+</table>
+
+<div class="note">
+  <strong>Important:</strong> Row conductor bands must carry up to ${fmt(fullRowCurrent,1)} A continuously during fast warm-up mode. Use multi-strand conductive yarn or woven copper tape rated ≥${fmt(fullRowCurrent*1.3,1)} A. Total band resistance must stay below ${fmt(s.rPixel*0.05,3)} Ω per row to avoid parasitic heating of the conductor itself.
+</div>
+
+<h2>Wiring Diagram</h2>
+<p>The diagram below shows the textile matrix wiring. Horizontal bands are row conductors (high-side); vertical bands are column conductors (low-side). All ${rows+cols} lines terminate at the connector strip (bottom-right).</p>
+<div class="drawing">${svgClone.outerHTML}</div>
+
+<h2>Driver PCB Interface</h2>
+<table>
+  <tr><th>Signal</th><th>Description</th></tr>
+  <tr><td>ROW 1–${rows} (pins ${cols+1}–${cols+rows})</td><td>High-side row switches (P-MOSFET, ${s.voltage}V). One row active at a time during scan mode.</td></tr>
+  <tr><td>COL 1–${cols} (pins 1–${cols})</td><td>Low-side column sinks (N-MOSFET). PWM-controlled for per-pixel intensity.</td></tr>
+  <tr><td>Supply</td><td>${s.voltage}V DC, ${fmt(fullRowCurrent*1.2,1)}A minimum (fast warm-up), 3A minimum (scan mode)</td></tr>
+</table>
+
+<h2>Fabrication Notes</h2>
+<p><strong>Heater yarn:</strong> Use conductive yarn with ~${fmt(s.rPerMeter,0)} Ω/m resistance. Embroider or sew each pixel as a ${(patternNames[s.pattern]||s.pattern).toLowerCase()} trace covering the full ${fmt(side,1)}×${fmt(side,1)} cm pixel area.</p>
+<p><strong>Pixel isolation:</strong> Ensure no electrical contact between adjacent pixel traces. A thin non-conductive fabric layer between pixels is recommended.</p>
+<p><strong>Connector placement:</strong> Route all row and column bands to the bottom-right corner of the garment panel. Stagger band terminations at 0.5 mm pitch matching the ${rows+cols}-pin FPC connector.</p>
+<p><strong>Testing:</strong> Measure resistance of each pixel before assembly. Reject pixels outside ${fmt(s.rPixel*0.85,1)}–${fmt(s.rPixel*1.15,1)} Ω (±15% tolerance).</p>
+
+<div class="footer">Heat Pixel Matrix Configurator — ${new Date().getFullYear()}</div>
+
+<script>window.onload = () => { window.print(); }<\/script>
+</body></html>`);
+  win.document.close();
+}
+
+document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
+
+</script>
+
+<!-- GitHub link -->
+<a href="https://github.com/kryptokommunist/heat-pixel-matrix-configurator" target="_blank" id="gh-link"
+   style="position:fixed; bottom:12px; right:16px; font-family:monospace; font-size:11px; color:#8b949e;
+          text-decoration:none; display:flex; align-items:center; gap:5px; opacity:0.7; transition:opacity .15s;"
+   onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="#8b949e"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  ♥ kryptokommunist
+</a>
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 820" font-family="monospace" font-size="11">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4fc3f7"/>
+    </marker>
+    <marker id="arr_g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a5d6a7"/>
+    </marker>
+    <marker id="arr_o" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ffb74d"/>
+    </marker>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="820" fill="#0a0f1a"/>
+
+  <!-- Title -->
+  <text x="550" y="28" text-anchor="middle" fill="#e0e0e0" font-size="16" font-weight="bold">Heat Pixel Matrix Driver — 16×16 (256 pixels)</text>
+  <text x="550" y="46" text-anchor="middle" fill="#78909c" font-size="10">ESP32-C3 + 4× 74HC595 + 32× MOSFET  |  Row multiplexing, PWM via OE# blanking  |  VHEAT 5–12V</text>
+
+  <!-- ═══ POWER BLOCK ═══ -->
+  <rect x="20" y="60" width="180" height="130" rx="6" fill="#0d1b2a" stroke="#37474f" stroke-width="1.5"/>
+  <text x="110" y="77" text-anchor="middle" fill="#90a4ae" font-size="10" font-weight="bold">POWER</text>
+
+  <rect x="30" y="82" width="70" height="20" rx="3" fill="#1a3a4a" stroke="#4fc3f7" stroke-width="1"/>
+  <text x="65" y="96" text-anchor="middle" fill="#4fc3f7" font-size="9">J1 USB-C</text>
+
+  <rect x="110" y="82" width="80" height="20" rx="3" fill="#1a3a4a" stroke="#ffb74d" stroke-width="1"/>
+  <text x="150" y="96" text-anchor="middle" fill="#ffb74d" font-size="9">J3 12V XT30</text>
+
+  <text x="110" y="118" text-anchor="middle" fill="#78909c" font-size="9">D1 SS14 (rev. prot.)</text>
+  <text x="110" y="130" text-anchor="middle" fill="#78909c" font-size="9">F1 5A polyfuse</text>
+
+  <rect x="30" y="140" width="160" height="20" rx="3" fill="#1a4a2a" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="110" y="154" text-anchor="middle" fill="#a5d6a7" font-size="9" font-weight="bold">U2 AMS1117-3.3  →  +3V3</text>
+
+  <text x="110" y="180" text-anchor="middle" fill="#546e8a" font-size="8">4× C470µF + 4× C100nF VHEAT</text>
+
+  <!-- VHEAT bus line -->
+  <line x1="200" y1="100" x2="240" y2="100" stroke="#ffb74d" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="215" y="95" fill="#ffb74d" font-size="9">VHEAT</text>
+
+  <!-- +3V3 bus line -->
+  <line x1="200" y1="155" x2="240" y2="155" stroke="#a5d6a7" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="210" y="150" fill="#a5d6a7" font-size="9">+3V3</text>
+
+  <!-- ═══ ESP32-C3 BLOCK ═══ -->
+  <rect x="240" y="60" width="190" height="220" rx="6" fill="#0d1b2a" stroke="#7e57c2" stroke-width="1.5"/>
+  <text x="335" y="77" text-anchor="middle" fill="#b39ddb" font-size="10" font-weight="bold">U1 ESP32-C3-MINI-1-H4</text>
+
+  <!-- GPIO pins left side -->
+  <text x="250" y="95"  fill="#4fc3f7" font-size="9">GPIO0 ──── SPI_CLK</text>
+  <text x="250" y="108" fill="#4fc3f7" font-size="9">GPIO1 ──── ROW_MOSI</text>
+  <text x="250" y="121" fill="#4fc3f7" font-size="9">GPIO2 ──── ROW_LATCH</text>
+  <text x="250" y="134" fill="#4fc3f7" font-size="9">GPIO3 ──── COL_MOSI</text>
+  <text x="250" y="147" fill="#4fc3f7" font-size="9">GPIO4 ──── COL_LATCH</text>
+  <text x="250" y="160" fill="#ffb74d" font-size="9">GPIO5 ──── COL_OE# (PWM)</text>
+  <text x="250" y="173" fill="#a5d6a7" font-size="9">GPIO8 ──── LED_DAT</text>
+  <text x="250" y="186" fill="#90a4ae" font-size="9">GPIO9 ──── BOOT btn</text>
+  <text x="250" y="199" fill="#ce93d8" font-size="9">GPIO20 ─── I2C_SDA</text>
+  <text x="250" y="212" fill="#ce93d8" font-size="9">GPIO21 ─── I2C_SCL</text>
+  <text x="250" y="225" fill="#546e8a" font-size="9">GPIO18/19 ─ USB D-/D+</text>
+  <text x="250" y="250" fill="#a5d6a7" font-size="9">+3V3 / GND</text>
+  <text x="335" y="268" text-anchor="middle" fill="#546e8a" font-size="8">LCSC: C2934560</text>
+
+  <!-- SPI lines going right to shift registers -->
+  <line x1="430" y1="95"  x2="500" y2="95"  stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="108" x2="500" y2="108" stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="121" x2="500" y2="121" stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="134" x2="500" y2="240" stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="430" y1="147" x2="500" y2="253" stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- OE# line -->
+  <line x1="430" y1="160" x2="680" y2="253" stroke="#ffb74d" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr_o)"/>
+  <text x="540" y="200" fill="#ffb74d" font-size="8">PWM blanking</text>
+
+  <!-- ═══ ROW SHIFT REGISTERS ═══ -->
+  <rect x="500" y="60" width="180" height="190" rx="6" fill="#0d1b2a" stroke="#4fc3f7" stroke-width="1.5"/>
+  <text x="590" y="77" text-anchor="middle" fill="#81d4fa" font-size="10" font-weight="bold">ROW CHAIN</text>
+  <text x="590" y="90" text-anchor="middle" fill="#546e8a" font-size="9">U3 + U4  (74HC595 × 2)</text>
+
+  <!-- Row SR details -->
+  <rect x="510" y="95" width="75" height="60" rx="3" fill="#112233" stroke="#4fc3f7" stroke-width="1"/>
+  <text x="547" y="110" text-anchor="middle" fill="#81d4fa" font-size="9">U3</text>
+  <text x="547" y="122" text-anchor="middle" fill="#546e8a" font-size="8">74HC595</text>
+  <text x="547" y="134" text-anchor="middle" fill="#546e8a" font-size="8">QA..QH</text>
+  <text x="547" y="146" text-anchor="middle" fill="#546e8a" font-size="8">ROW 1–8</text>
+
+  <rect x="595" y="95" width="75" height="60" rx="3" fill="#112233" stroke="#4fc3f7" stroke-width="1"/>
+  <text x="632" y="110" text-anchor="middle" fill="#81d4fa" font-size="9">U4</text>
+  <text x="632" y="122" text-anchor="middle" fill="#546e8a" font-size="8">74HC595</text>
+  <text x="632" y="134" text-anchor="middle" fill="#546e8a" font-size="8">QA..QH</text>
+  <text x="632" y="146" text-anchor="middle" fill="#546e8a" font-size="8">ROW 9–16</text>
+
+  <!-- QH' daisy chain -->
+  <line x1="585" y1="125" x2="595" y2="125" stroke="#4fc3f7" stroke-width="1.5"/>
+
+  <text x="590" y="177" text-anchor="middle" fill="#90a4ae" font-size="9">SER/SRCLK/RCLK shared</text>
+  <text x="590" y="190" text-anchor="middle" fill="#90a4ae" font-size="9">OE# → +3V3 (always on)</text>
+  <text x="590" y="203" text-anchor="middle" fill="#ffb74d" font-size="9">Active bit = LOW (P-ch ON)</text>
+  <text x="590" y="218" text-anchor="middle" fill="#546e8a" font-size="8">LCSC: C5947 × 2</text>
+
+  <!-- Gate resistors + ROW MOSFET array label -->
+  <line x1="680" y1="125" x2="710" y2="125" stroke="#4fc3f7" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="690" y="120" fill="#78909c" font-size="8">16× 100Ω</text>
+  <text x="690" y="132" fill="#78909c" font-size="8">gate R</text>
+
+  <!-- ═══ ROW MOSFET ARRAY ═══ -->
+  <rect x="710" y="60" width="150" height="400" rx="6" fill="#0d2a1a" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="785" y="77" text-anchor="middle" fill="#a5d6a7" font-size="10" font-weight="bold">ROW DRIVERS</text>
+  <text x="785" y="90" text-anchor="middle" fill="#546e8a" font-size="9">Q_R1–Q_R16  AO3401A (P-ch)</text>
+
+  <!-- Draw 16 row MOSFETs schematically -->
+  <!-- Each row: Gate (left) ← SR, Source ← VHEAT, Drain → ROW line (right) -->
+  <line x1="720" y1="100" x2="855" y2="100" stroke="#ffb74d" stroke-width="2"/>
+  <text x="860" y="103" fill="#ffb74d" font-size="8">VHEAT</text>
+
+  <!-- 16 MOSFET symbols (compressed) -->
+  <!-- Q_R1 through Q_R16, y from 110 to 430, step 20px -->
+  <!-- Source bars connecting to VHEAT rail -->
+
+  <text x="785" y="112" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R1  ── ROW1</text>
+  <text x="785" y="125" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R2  ── ROW2</text>
+  <text x="785" y="138" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R3  ── ROW3</text>
+  <text x="785" y="151" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R4  ── ROW4</text>
+  <text x="785" y="164" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R5  ── ROW5</text>
+  <text x="785" y="177" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R6  ── ROW6</text>
+  <text x="785" y="190" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R7  ── ROW7</text>
+  <text x="785" y="203" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R8  ── ROW8</text>
+  <text x="785" y="216" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R9  ── ROW9</text>
+  <text x="785" y="229" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R10 ── ROW10</text>
+  <text x="785" y="242" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R11 ── ROW11</text>
+  <text x="785" y="255" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R12 ── ROW12</text>
+  <text x="785" y="268" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R13 ── ROW13</text>
+  <text x="785" y="281" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R14 ── ROW14</text>
+  <text x="785" y="294" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R15 ── ROW15</text>
+  <text x="785" y="307" text-anchor="middle" fill="#a5d6a7" font-size="8">Q_R16 ── ROW16</text>
+
+  <text x="785" y="335" text-anchor="middle" fill="#546e8a" font-size="8">LCSC: C15127 (AO3401A)</text>
+  <text x="785" y="348" text-anchor="middle" fill="#546e8a" font-size="8">P-ch SOT-23</text>
+  <text x="785" y="361" text-anchor="middle" fill="#ffb74d" font-size="8">Source → VHEAT</text>
+  <text x="785" y="374" text-anchor="middle" fill="#a5d6a7" font-size="8">Drain  → ROW[n]</text>
+  <text x="785" y="387" text-anchor="middle" fill="#546e8a" font-size="8">10kΩ pull-up gate→VHEAT</text>
+  <text x="785" y="400" text-anchor="middle" fill="#546e8a" font-size="8">Default OFF (safe)</text>
+  <text x="785" y="420" text-anchor="middle" fill="#78909c" font-size="8">Id=4A, Vds=-30V</text>
+  <text x="785" y="433" text-anchor="middle" fill="#78909c" font-size="8">Rds=50mΩ</text>
+  <text x="785" y="448" text-anchor="middle" fill="#78909c" font-size="8">P_mosfet&lt;200mW/ch</text>
+
+  <!-- ═══ COL SHIFT REGISTERS ═══ -->
+  <rect x="500" y="230" width="180" height="170" rx="6" fill="#0d1b2a" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="590" y="247" text-anchor="middle" fill="#ffcc80" font-size="10" font-weight="bold">COLUMN CHAIN</text>
+  <text x="590" y="260" text-anchor="middle" fill="#546e8a" font-size="9">U5 + U6  (74HC595 × 2)</text>
+
+  <rect x="510" y="265" width="75" height="55" rx="3" fill="#112233" stroke="#ffb74d" stroke-width="1"/>
+  <text x="547" y="280" text-anchor="middle" fill="#ffcc80" font-size="9">U5</text>
+  <text x="547" y="292" text-anchor="middle" fill="#546e8a" font-size="8">74HC595</text>
+  <text x="547" y="304" text-anchor="middle" fill="#546e8a" font-size="8">COL 1–8</text>
+
+  <rect x="595" y="265" width="75" height="55" rx="3" fill="#112233" stroke="#ffb74d" stroke-width="1"/>
+  <text x="632" y="280" text-anchor="middle" fill="#ffcc80" font-size="9">U6</text>
+  <text x="632" y="292" text-anchor="middle" fill="#546e8a" font-size="8">74HC595</text>
+  <text x="632" y="304" text-anchor="middle" fill="#546e8a" font-size="8">COL 9–16</text>
+
+  <line x1="585" y1="292" x2="595" y2="292" stroke="#ffb74d" stroke-width="1.5"/>
+
+  <text x="590" y="340" text-anchor="middle" fill="#ffcc80" font-size="9">OE# ← GPIO5 (PWM blanking)</text>
+  <text x="590" y="353" text-anchor="middle" fill="#90a4ae" font-size="9">Active bit = HIGH (N-ch ON)</text>
+  <text x="590" y="366" text-anchor="middle" fill="#546e8a" font-size="8">Shared SRCLK with row chain</text>
+  <text x="590" y="380" text-anchor="middle" fill="#546e8a" font-size="8">Separate RCLK (COL_LATCH)</text>
+  <text x="590" y="393" text-anchor="middle" fill="#546e8a" font-size="8">LCSC: C5947 × 2</text>
+
+  <!-- Gate arrow to col MOSFETs -->
+  <line x1="680" y1="295" x2="710" y2="295" stroke="#ffb74d" stroke-width="1.5" marker-end="url(#arr_o)"/>
+  <text x="690" y="290" fill="#78909c" font-size="8">16× 100Ω</text>
+
+  <!-- ═══ COL MOSFET ARRAY ═══ -->
+  <rect x="710" y="470" width="150" height="310" rx="6" fill="#2a1a0d" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="785" y="487" text-anchor="middle" fill="#ffcc80" font-size="10" font-weight="bold">COLUMN DRIVERS</text>
+  <text x="785" y="500" text-anchor="middle" fill="#546e8a" font-size="9">Q_C1–Q_C16  AO3400A (N-ch)</text>
+
+  <!-- GND rail -->
+  <line x1="720" y1="760" x2="855" y2="760" stroke="#546e8a" stroke-width="2"/>
+  <text x="860" y="763" fill="#546e8a" font-size="8">GND</text>
+
+  <text x="785" y="518" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C1  ── COL1</text>
+  <text x="785" y="531" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C2  ── COL2</text>
+  <text x="785" y="544" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C3  ── COL3</text>
+  <text x="785" y="557" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C4  ── COL4</text>
+  <text x="785" y="570" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C5  ── COL5</text>
+  <text x="785" y="583" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C6  ── COL6</text>
+  <text x="785" y="596" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C7  ── COL7</text>
+  <text x="785" y="609" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C8  ── COL8</text>
+  <text x="785" y="622" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C9  ── COL9</text>
+  <text x="785" y="635" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C10 ── COL10</text>
+  <text x="785" y="648" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C11 ── COL11</text>
+  <text x="785" y="661" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C12 ── COL12</text>
+  <text x="785" y="674" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C13 ── COL13</text>
+  <text x="785" y="687" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C14 ── COL14</text>
+  <text x="785" y="700" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C15 ── COL15</text>
+  <text x="785" y="713" text-anchor="middle" fill="#ffb74d" font-size="8">Q_C16 ── COL16</text>
+
+  <text x="785" y="735" text-anchor="middle" fill="#546e8a" font-size="8">LCSC: C700233 (AO3400A)</text>
+  <text x="785" y="748" text-anchor="middle" fill="#ffb74d" font-size="8">Drain ← COL[n]  Source → GND</text>
+  <text x="785" y="761" text-anchor="middle" fill="#546e8a" font-size="8">10kΩ pull-down gate→GND</text>
+
+  <!-- ═══ J2 CONNECTOR ═══ -->
+  <rect x="870" y="60" width="210" height="720" rx="6" fill="#0d1b2a" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="975" y="77" text-anchor="middle" fill="#ce93d8" font-size="10" font-weight="bold">J2 — Textile Connector</text>
+  <text x="975" y="90" text-anchor="middle" fill="#546e8a" font-size="9">32-pin FPC 0.5mm  LCSC: C160391</text>
+
+  <!-- Row lines -->
+  <text x="975" y="108" text-anchor="middle" fill="#a5d6a7" font-size="9" font-weight="bold">ROW pins (pin 1–16)</text>
+  <!-- draw 16 row lines -->
+  <text x="885" y="122" fill="#a5d6a7" font-size="8">1  ROW1</text>
+  <text x="885" y="134" fill="#a5d6a7" font-size="8">2  ROW2</text>
+  <text x="885" y="146" fill="#a5d6a7" font-size="8">3  ROW3</text>
+  <text x="885" y="158" fill="#a5d6a7" font-size="8">4  ROW4</text>
+  <text x="885" y="170" fill="#a5d6a7" font-size="8">5  ROW5</text>
+  <text x="885" y="182" fill="#a5d6a7" font-size="8">6  ROW6</text>
+  <text x="885" y="194" fill="#a5d6a7" font-size="8">7  ROW7</text>
+  <text x="885" y="206" fill="#a5d6a7" font-size="8">8  ROW8</text>
+  <text x="885" y="218" fill="#a5d6a7" font-size="8">9  ROW9</text>
+  <text x="885" y="230" fill="#a5d6a7" font-size="8">10 ROW10</text>
+  <text x="885" y="242" fill="#a5d6a7" font-size="8">11 ROW11</text>
+  <text x="885" y="254" fill="#a5d6a7" font-size="8">12 ROW12</text>
+  <text x="885" y="266" fill="#a5d6a7" font-size="8">13 ROW13</text>
+  <text x="885" y="278" fill="#a5d6a7" font-size="8">14 ROW14</text>
+  <text x="885" y="290" fill="#a5d6a7" font-size="8">15 ROW15</text>
+  <text x="885" y="302" fill="#a5d6a7" font-size="8">16 ROW16</text>
+
+  <!-- Col lines -->
+  <text x="975" y="325" text-anchor="middle" fill="#ffb74d" font-size="9" font-weight="bold">COL pins (pin 17–32)</text>
+  <text x="885" y="339" fill="#ffb74d" font-size="8">17 COL1</text>
+  <text x="885" y="351" fill="#ffb74d" font-size="8">18 COL2</text>
+  <text x="885" y="363" fill="#ffb74d" font-size="8">19 COL3</text>
+  <text x="885" y="375" fill="#ffb74d" font-size="8">20 COL4</text>
+  <text x="885" y="387" fill="#ffb74d" font-size="8">21 COL5</text>
+  <text x="885" y="399" fill="#ffb74d" font-size="8">22 COL6</text>
+  <text x="885" y="411" fill="#ffb74d" font-size="8">23 COL7</text>
+  <text x="885" y="423" fill="#ffb74d" font-size="8">24 COL8</text>
+  <text x="885" y="435" fill="#ffb74d" font-size="8">25 COL9</text>
+  <text x="885" y="447" fill="#ffb74d" font-size="8">26 COL10</text>
+  <text x="885" y="459" fill="#ffb74d" font-size="8">27 COL11</text>
+  <text x="885" y="471" fill="#ffb74d" font-size="8">28 COL12</text>
+  <text x="885" y="483" fill="#ffb74d" font-size="8">29 COL13</text>
+  <text x="885" y="495" fill="#ffb74d" font-size="8">30 COL14</text>
+  <text x="885" y="507" fill="#ffb74d" font-size="8">31 COL15</text>
+  <text x="885" y="519" fill="#ffb74d" font-size="8">32 COL16</text>
+
+  <!-- Textile matrix graphic -->
+  <text x="975" y="548" text-anchor="middle" fill="#546e8a" font-size="9">── Textile Matrix (16×16) ──</text>
+  <rect x="885" y="558" width="185" height="185" rx="4" fill="#0a0f1a" stroke="#4a3a6a" stroke-width="1"/>
+  <!-- 16×16 grid dots -->
+  <text x="975" y="643" text-anchor="middle" fill="#7a6a9a" font-size="8">16 copper row bands →</text>
+  <text x="975" y="655" text-anchor="middle" fill="#7a6a9a" font-size="8">↓ 16 copper col bands</text>
+  <text x="975" y="667" text-anchor="middle" fill="#ff6d00" font-size="8">256 heater spiral pads</text>
+
+  <!-- Mini matrix grid -->
+  <line x1="895" y1="570" x2="1060" y2="570" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="895" y1="580" x2="1060" y2="580" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="895" y1="590" x2="1060" y2="590" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="895" y1="600" x2="1060" y2="600" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="895" y1="610" x2="1060" y2="610" stroke="#ff6d00" stroke-width="1"/><!-- active row -->
+  <line x1="895" y1="620" x2="1060" y2="620" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="895" y1="630" x2="1060" y2="630" stroke="#2e4a5a" stroke-width="0.5"/>
+
+  <line x1="895" y1="560" x2="895" y2="740" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="906" y1="560" x2="906" y2="740" stroke="#2e4a5a" stroke-width="0.5"/>
+  <line x1="917" y1="560" x2="917" y2="740" stroke="#ff6d00" stroke-width="1"/><!-- active col -->
+  <line x1="928" y1="560" x2="928" y2="740" stroke="#2e4a5a" stroke-width="0.5"/>
+
+  <!-- Active pixel glow -->
+  <circle cx="917" cy="610" r="5" fill="#ff4400" opacity="0.7" filter="url(#glow2)"/>
+
+  <text x="975" y="760" text-anchor="middle" fill="#78909c" font-size="8">12.5Ω per pixel (HEATER_SPIRAL_5CM)</text>
+  <text x="975" y="772" text-anchor="middle" fill="#78909c" font-size="8">I=400mA@5V / 960mA@12V</text>
+
+  <!-- Row lines from MOSFETs to J2 -->
+  <line x1="860" y1="190" x2="870" y2="190" stroke="#a5d6a7" stroke-width="1" marker-end="url(#arr_g)"/>
+  <text x="863" y="187" fill="#a5d6a7" font-size="7">ROW1..16</text>
+
+  <!-- Col lines from MOSFETs to J2 -->
+  <line x1="860" y1="515" x2="870" y2="430" stroke="#ffb74d" stroke-width="1" marker-end="url(#arr_o)"/>
+  <text x="863" y="475" fill="#ffb74d" font-size="7">COL1..16</text>
+
+  <!-- ═══ TEMP SENSORS ═══ -->
+  <rect x="20" y="210" width="180" height="110" rx="6" fill="#0d1b2a" stroke="#ce93d8" stroke-width="1.5"/>
+  <text x="110" y="227" text-anchor="middle" fill="#ce93d8" font-size="10" font-weight="bold">TEMP SENSORS</text>
+  <rect x="30" y="235" width="70" height="35" rx="3" fill="#1a112a" stroke="#ce93d8" stroke-width="1"/>
+  <text x="65" y="250" text-anchor="middle" fill="#ce93d8" font-size="8">U7 MCP9808</text>
+  <text x="65" y="263" text-anchor="middle" fill="#546e8a" font-size="7">addr 0x18</text>
+  <rect x="110" y="235" width="70" height="35" rx="3" fill="#1a112a" stroke="#ce93d8" stroke-width="1"/>
+  <text x="145" y="250" text-anchor="middle" fill="#ce93d8" font-size="8">U8 MCP9808</text>
+  <text x="145" y="263" text-anchor="middle" fill="#546e8a" font-size="7">addr 0x19</text>
+  <text x="110" y="292" text-anchor="middle" fill="#78909c" font-size="8">I2C: SDA/SCL 4.7kΩ PU</text>
+  <text x="110" y="304" text-anchor="middle" fill="#78909c" font-size="8">OT interrupt → GPIO</text>
+  <text x="110" y="316" text-anchor="middle" fill="#546e8a" font-size="7">LCSC: C194710 × 2</text>
+
+  <!-- I2C lines to ESP32 -->
+  <line x1="200" y1="260" x2="240" y2="199" stroke="#ce93d8" stroke-width="1" stroke-dasharray="5,3"/>
+
+  <!-- ═══ SK6805 STATUS LEDs ═══ -->
+  <rect x="20" y="340" width="180" height="80" rx="6" fill="#0d1b2a" stroke="#a5d6a7" stroke-width="1.5"/>
+  <text x="110" y="357" text-anchor="middle" fill="#a5d6a7" font-size="10" font-weight="bold">STATUS LEDs</text>
+  <text x="110" y="370" text-anchor="middle" fill="#546e8a" font-size="9">LED1–16  SK6805-EC20</text>
+  <text x="110" y="383" text-anchor="middle" fill="#78909c" font-size="8">WS2812 compatible, 1 per row</text>
+  <text x="110" y="396" text-anchor="middle" fill="#78909c" font-size="8">GPIO8 → 10Ω → DI chain</text>
+  <text x="110" y="409" text-anchor="middle" fill="#546e8a" font-size="7">LCSC: C2890364 × 16</text>
+
+  <!-- LED line to ESP32 -->
+  <line x1="200" y1="380" x2="240" y2="173" stroke="#a5d6a7" stroke-width="1" stroke-dasharray="5,3"/>
+
+  <!-- ═══ TIMING DIAGRAM ═══ -->
+  <rect x="20" y="440" width="460" height="190" rx="6" fill="#0d1b2a" stroke="#37474f" stroke-width="1.5"/>
+  <text x="250" y="457" text-anchor="middle" fill="#90a4ae" font-size="10" font-weight="bold">Multiplexing Timing (100Hz frame = 10ms)</text>
+
+  <!-- Row scan timing bars -->
+  <text x="30" y="475" fill="#546e8a" font-size="9">ROW1:</text>
+  <rect x="70" y="465" width="80" height="12" fill="#a5d6a7" opacity="0.8" rx="2"/>
+  <rect x="150" y="465" width="320" height="12" fill="#1a2a1a" rx="2"/>
+  <text x="155" y="475" fill="#546e8a" font-size="8">0.625ms ON  (6.25% of 10ms frame)</text>
+
+  <text x="30" y="494" fill="#546e8a" font-size="9">ROW2:</text>
+  <rect x="70" y="484" width="80" height="12" fill="#1a2a1a" rx="2"/>
+  <rect x="150" y="484" width="80" height="12" fill="#a5d6a7" opacity="0.8" rx="2"/>
+  <rect x="230" y="484" width="240" height="12" fill="#1a2a1a" rx="2"/>
+
+  <text x="30" y="513" fill="#546e8a" font-size="9">ROW3:</text>
+  <rect x="70" y="503" width="160" height="12" fill="#1a2a1a" rx="2"/>
+  <rect x="230" y="503" width="80" height="12" fill="#a5d6a7" opacity="0.8" rx="2"/>
+  <rect x="310" y="503" width="160" height="12" fill="#1a2a1a" rx="2"/>
+
+  <text x="30" y="532" fill="#546e8a" font-size="9">…</text>
+
+  <text x="30" y="551" fill="#546e8a" font-size="9">ROW16:</text>
+  <rect x="70" y="541" width="400" height="12" fill="#1a2a1a" rx="2"/>
+  <!-- No active bar shown for row16 here -->
+
+  <!-- PWM waveform -->
+  <text x="30" y="578" fill="#ffb74d" font-size="9">COL_OE# (PWM):</text>
+  <text x="30" y="598" fill="#78909c" font-size="8">Within each row slot, OE# creates PWM for per-pixel intensity</text>
+  <!-- PWM waveform sketch -->
+  <polyline points="140,570 140,562 158,562 158,570 165,570 165,562 183,562 183,570 190,570 190,562 200,562 200,570 240,570 240,562 248,562 248,570 255,570 255,562 265,562 265,570"
+    fill="none" stroke="#ffb74d" stroke-width="1.5"/>
+  <text x="280" y="568" fill="#ffb74d" font-size="8">← duty = pixel intensity</text>
+
+  <!-- SPI burst explanation -->
+  <text x="30" y="620" fill="#4fc3f7" font-size="9">SPI burst (32 bits): [COL_SR 16b] + [ROW_SR 16b] per row slot</text>
+  <text x="30" y="635" fill="#546e8a" font-size="8">→ latch both chains simultaneously → switch row in &lt;5µs</text>
+
+  <!-- ═══ PCB OUTLINE ═══ -->
+  <rect x="20" y="650" width="460" height="150" rx="6" fill="#0d1b2a" stroke="#37474f" stroke-width="1.5"/>
+  <text x="250" y="667" text-anchor="middle" fill="#90a4ae" font-size="10" font-weight="bold">PCB Layout — 80×60mm (2-layer)</text>
+
+  <rect x="35" y="675" width="430" height="115" rx="4" fill="#0a0f1a" stroke="#546e8a" stroke-width="1"/>
+  <!-- Layout sketch blocks -->
+  <rect x="40"  y="680" width="50" height="18" rx="2" fill="#1a3a4a" stroke="#4fc3f7" stroke-width="0.8"/>
+  <text x="65" y="692" text-anchor="middle" fill="#4fc3f7" font-size="7">J1 USB</text>
+
+  <rect x="100" y="680" width="50" height="18" rx="2" fill="#1a3a4a" stroke="#ffb74d" stroke-width="0.8"/>
+  <text x="125" y="692" text-anchor="middle" fill="#ffb74d" font-size="7">J3 12V</text>
+
+  <rect x="160" y="680" width="30" height="18" rx="2" fill="#1a4a2a" stroke="#a5d6a7" stroke-width="0.8"/>
+  <text x="175" y="692" text-anchor="middle" fill="#a5d6a7" font-size="7">U2</text>
+
+  <rect x="200" y="678" width="80" height="22" rx="2" fill="#1a112a" stroke="#7e57c2" stroke-width="1"/>
+  <text x="240" y="692" text-anchor="middle" fill="#b39ddb" font-size="7">U1 ESP32-C3</text>
+
+  <rect x="290" y="680" width="40" height="18" rx="2" fill="#112233" stroke="#4fc3f7" stroke-width="0.8"/>
+  <text x="310" y="692" text-anchor="middle" fill="#81d4fa" font-size="7">U3+U4 SR</text>
+
+  <rect x="340" y="680" width="40" height="18" rx="2" fill="#112233" stroke="#ffb74d" stroke-width="0.8"/>
+  <text x="360" y="692" text-anchor="middle" fill="#ffcc80" font-size="7">U5+U6 SR</text>
+
+  <rect x="390" y="680" width="30" height="18" rx="2" fill="#1a112a" stroke="#ce93d8" stroke-width="0.8"/>
+  <text x="405" y="692" text-anchor="middle" fill="#ce93d8" font-size="7">U7+U8</text>
+
+  <!-- Row MOSFETs row -->
+  <rect x="40" y="706" width="425" height="14" rx="2" fill="#0d2a1a" stroke="#a5d6a7" stroke-width="0.8"/>
+  <text x="252" y="716" text-anchor="middle" fill="#a5d6a7" font-size="7">Q_R1–Q_R16  (AO3401A ×16, row P-MOSFETs) + 10kΩ pull-ups</text>
+
+  <!-- Col MOSFETs row -->
+  <rect x="40" y="725" width="425" height="14" rx="2" fill="#2a1a0d" stroke="#ffb74d" stroke-width="0.8"/>
+  <text x="252" y="735" text-anchor="middle" fill="#ffb74d" font-size="7">Q_C1–Q_C16  (AO3400A ×16, col N-MOSFETs) + 10kΩ pull-downs</text>
+
+  <!-- C_BULK row -->
+  <rect x="40" y="744" width="200" height="12" rx="2" fill="#1a2a1a" stroke="#78909c" stroke-width="0.8"/>
+  <text x="140" y="753" text-anchor="middle" fill="#78909c" font-size="7">C_BULK 470µF ×4  (behind J2)</text>
+
+  <!-- J2 connector -->
+  <rect x="40" y="760" width="425" height="22" rx="2" fill="#1a0d2a" stroke="#ce93d8" stroke-width="1"/>
+  <text x="252" y="775" text-anchor="middle" fill="#ce93d8" font-size="8" font-weight="bold">J2 — 32-pin FPC  (bottom edge, 0.5mm pitch) — 16 ROW + 16 COL</text>
+
+  <!-- VHEAT bottom plane note -->
+  <text x="252" y="790" text-anchor="middle" fill="#546e8a" font-size="7">Bottom layer: VHEAT pour  |  Top layer: GND pour  |  1.5mm row/col traces  |  M2.5 mounting ×4</text>
+
+</svg>

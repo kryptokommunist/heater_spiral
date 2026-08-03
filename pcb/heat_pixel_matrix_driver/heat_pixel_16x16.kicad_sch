@@ -1,0 +1,423 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; Heat Pixel Matrix Driver — 16×16
+  ;; Based on: heater base 2 ESP32-C3 (existing design)
+  ;; Architecture: 2× 74HC595 row high-side (AO3401A), 2× 74HC595 col low-side (AO3400A)
+  ;; PWM blanking via OE# on col chain (ESP32 GPIO5)
+  ;; ─────────────────────────────────────────────────────────────────────────
+
+  (lib_symbols
+    ;; ── ESP32-C3-MINI-1-H4 ──────────────────────────────────────────────────
+    (symbol "ESP32-C3-MINI-1-H4"
+      (pin input "GPIO0"  (at -7.62  6.35  0) (length 2.54))
+      (pin input "GPIO1"  (at -7.62  3.81  0) (length 2.54))
+      (pin input "GPIO2"  (at -7.62  1.27  0) (length 2.54))
+      (pin input "GPIO3"  (at -7.62 -1.27  0) (length 2.54))
+      (pin input "GPIO4"  (at -7.62 -3.81  0) (length 2.54))
+      (pin input "GPIO5"  (at -7.62 -6.35  0) (length 2.54))
+      (pin input "GPIO8"  (at  7.62  6.35 180) (length 2.54))
+      (pin input "GPIO9"  (at  7.62  3.81 180) (length 2.54))
+      (pin input "GPIO20" (at  7.62  1.27 180) (length 2.54))
+      (pin input "GPIO21" (at  7.62 -1.27 180) (length 2.54))
+      (pin input "GPIO18" (at  7.62 -3.81 180) (length 2.54))
+      (pin input "GPIO19" (at  7.62 -6.35 180) (length 2.54))
+      (pin power_in "3V3" (at  0     8.89  270) (length 2.54))
+      (pin power_in "GND" (at  0    -8.89  90)  (length 2.54))
+      (rectangle (start -6.35 7.62) (end 6.35 -7.62))
+    )
+
+    ;; ── 74HC595 (shift register) ────────────────────────────────────────────
+    (symbol "74HC595"
+      (pin input  "SER"    (at -7.62  6.35  0) (length 2.54))
+      (pin input  "SRCLK"  (at -7.62  3.81  0) (length 2.54))
+      (pin input  "RCLK"   (at -7.62  1.27  0) (length 2.54))
+      (pin input  "OE_B"   (at -7.62 -1.27  0) (length 2.54))
+      (pin input  "SRCLR_B" (at -7.62 -3.81 0) (length 2.54))
+      (pin output "QA"     (at  7.62  6.35 180) (length 2.54))
+      (pin output "QB"     (at  7.62  4.77 180) (length 2.54))
+      (pin output "QC"     (at  7.62  3.18 180) (length 2.54))
+      (pin output "QD"     (at  7.62  1.59 180) (length 2.54))
+      (pin output "QE"     (at  7.62  0.00 180) (length 2.54))
+      (pin output "QF"     (at  7.62 -1.59 180) (length 2.54))
+      (pin output "QG"     (at  7.62 -3.18 180) (length 2.54))
+      (pin output "QH"     (at  7.62 -4.77 180) (length 2.54))
+      (pin output "QH_PRIME" (at 7.62 -6.35 180) (length 2.54))
+      (pin power_in "VCC"  (at  0     8.89 270)  (length 2.54))
+      (pin power_in "GND"  (at  0    -8.89  90)  (length 2.54))
+      (rectangle (start -6.35 7.62) (end 6.35 -7.62))
+    )
+
+    ;; ── AO3400A (N-ch MOSFET) ───────────────────────────────────────────────
+    (symbol "AO3400A"
+      (pin input  "G"  (at -7.62 0 0)   (length 2.54))
+      (pin passive "D" (at  0 5.08 270) (length 2.54))
+      (pin passive "S" (at  0 -5.08 90) (length 2.54))
+    )
+
+    ;; ── AO3401A (P-ch MOSFET) ───────────────────────────────────────────────
+    (symbol "AO3401A"
+      (pin input  "G"  (at -7.62 0 0)   (length 2.54))
+      (pin passive "D" (at  0 -5.08 90) (length 2.54))
+      (pin passive "S" (at  0  5.08 270) (length 2.54))
+    )
+
+    ;; ── AMS1117-3.3 ─────────────────────────────────────────────────────────
+    (symbol "AMS1117-3.3"
+      (pin power_in  "IN"  (at -5.08 0 0)  (length 2.54))
+      (pin power_out "OUT" (at  5.08 0 180) (length 2.54))
+      (pin power_in  "GND" (at  0 -5.08 90) (length 2.54))
+    )
+
+    ;; ── MCP9808T-E/MC ───────────────────────────────────────────────────────
+    (symbol "MCP9808"
+      (pin bidirectional "SDA"   (at -7.62  2.54 0) (length 2.54))
+      (pin input         "SCL"   (at -7.62  0    0) (length 2.54))
+      (pin output        "ALERT" (at -7.62 -2.54 0) (length 2.54))
+      (pin power_in      "GND"   (at  7.62 -2.54 180) (length 2.54))
+      (pin input         "A2"    (at  7.62  2.54 180) (length 2.54))
+      (pin input         "A1"    (at  7.62  1.27 180) (length 2.54))
+      (pin input         "A0"    (at  7.62  0    180) (length 2.54))
+      (pin power_in      "VDD"   (at  7.62  3.81 180) (length 2.54))
+      (rectangle (start -5.08 5.08) (end 5.08 -5.08))
+    )
+  )
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; POWER SYMBOLS
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (global_label "VHEAT" (shape input) (at 50.8 25.4 0))
+  (global_label "+3V3"  (shape input) (at 50.8 30.48 0))
+  (global_label "GND"   (shape input) (at 50.8 35.56 0))
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK A — Power Input (J1 USB-C, J3 12V, AMS1117-3.3)
+  ;; ─────────────────────────────────────────────────────────────────────────
+
+  ;; J1 USB-C connector
+  (symbol (lib_id "Connector:USB_C_Receptacle_USB2.0_16P")
+    (at 25.4 25.4 0) (unit 1) (reference "J1") (value "USB-C 16-pin")
+    (property "LCSC" "C2765186")
+    (pin "VBUS" (net "VHEAT"))
+    (pin "GND"  (net "GND"))
+    (pin "D+"   (net "USB_DP"))
+    (pin "D-"   (net "USB_DM"))
+  )
+
+  ;; J3 external 12V
+  (symbol (lib_id "Connector:Conn_01x02")
+    (at 25.4 38.1 0) (unit 1) (reference "J3") (value "12V_EXT")
+    (property "LCSC" "C601330")
+    (pin "1" (net "EXT_PWR_IN"))
+    (pin "2" (net "GND"))
+  )
+
+  ;; D1 Schottky reverse protection
+  (symbol (lib_id "Device:D_Schottky")
+    (at 38.1 25.4 0) (unit 1) (reference "D1") (value "SS14")
+    (property "LCSC" "C2480")
+    (pin "A" (net "EXT_PWR_IN"))
+    (pin "K" (net "VHEAT_UNFUSED"))
+  )
+
+  ;; F1 polyfuse 5A
+  (symbol (lib_id "Device:Polyfuse")
+    (at 50.8 25.4 0) (unit 1) (reference "F1") (value "5A")
+    (property "LCSC" "C70068")
+    (pin "1" (net "VHEAT_UNFUSED"))
+    (pin "2" (net "VHEAT"))
+  )
+
+  ;; U2 AMS1117-3.3
+  (symbol (lib_id "AMS1117-3.3")
+    (at 63.5 25.4 0) (unit 1) (reference "U2") (value "AMS1117-3.3")
+    (property "LCSC" "C6186") (property "Package" "SOT-223")
+    (pin "IN"  (net "VHEAT"))
+    (pin "GND" (net "GND"))
+    (pin "OUT" (net "+3V3"))
+  )
+
+  ;; Decoupling caps on +3V3
+  (symbol (lib_id "Device:C") (at 76.2 20.32 0) (reference "C1") (value "10uF")
+    (property "LCSC" "C15850")
+    (pin "1" (net "+3V3")) (pin "2" (net "GND")))
+  (symbol (lib_id "Device:C") (at 78.74 20.32 0) (reference "C2") (value "100nF")
+    (property "LCSC" "C14663")
+    (pin "1" (net "+3V3")) (pin "2" (net "GND")))
+
+  ;; Bulk caps on VHEAT (4×)
+  (symbol (lib_id "Device:C") (at 50.8 38.1 0) (reference "C3") (value "470uF_16V")
+    (property "LCSC" "C178593")
+    (pin "1" (net "VHEAT")) (pin "2" (net "GND")))
+  (symbol (lib_id "Device:C") (at 53.34 38.1 0) (reference "C4") (value "470uF_16V")
+    (property "LCSC" "C178593")
+    (pin "1" (net "VHEAT")) (pin "2" (net "GND")))
+  (symbol (lib_id "Device:C") (at 55.88 38.1 0) (reference "C5") (value "470uF_16V")
+    (property "LCSC" "C178593")
+    (pin "1" (net "VHEAT")) (pin "2" (net "GND")))
+  (symbol (lib_id "Device:C") (at 58.42 38.1 0) (reference "C6") (value "470uF_16V")
+    (property "LCSC" "C178593")
+    (pin "1" (net "VHEAT")) (pin "2" (net "GND")))
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK B — ESP32-C3-MINI-1-H4
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (symbol (lib_id "ESP32-C3-MINI-1-H4")
+    (at 101.6 50.8 0) (unit 1)
+    (reference "U1") (value "ESP32-C3-MINI-1-H4")
+    (property "LCSC" "C2934560")
+    (pin "GPIO0"  (net "SPI_CLK"))
+    (pin "GPIO1"  (net "ROW_MOSI"))
+    (pin "GPIO2"  (net "ROW_LATCH"))
+    (pin "GPIO3"  (net "COL_MOSI"))
+    (pin "GPIO4"  (net "COL_LATCH"))
+    (pin "GPIO5"  (net "COL_OE_B"))
+    (pin "GPIO8"  (net "LED_DAT"))
+    (pin "GPIO9"  (net "BOOT_BTN"))
+    (pin "GPIO20" (net "I2C_SDA"))
+    (pin "GPIO21" (net "I2C_SCL"))
+    (pin "GPIO18" (net "USB_DM"))
+    (pin "GPIO19" (net "USB_DP"))
+    (pin "3V3"    (net "+3V3"))
+    (pin "GND"    (net "GND"))
+  )
+
+  ;; SW1 BOOT button
+  (symbol (lib_id "Device:SW_Push")
+    (at 127 55.88 0) (reference "SW1") (value "BOOT")
+    (property "LCSC" "C318884")
+    (pin "1" (net "BOOT_BTN"))
+    (pin "2" (net "GND"))
+  )
+  (symbol (lib_id "Device:R") (at 127 50.8 0) (reference "R1") (value "10k")
+    (property "LCSC" "C25744")
+    (pin "1" (net "+3V3")) (pin "2" (net "BOOT_BTN")))
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK C — Row Shift Registers (U3, U4 = 74HC595)
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (symbol (lib_id "74HC595")
+    (at 152.4 50.8 0) (unit 1) (reference "U3") (value "74HC595")
+    (property "LCSC" "C5947") (property "Package" "SOIC-16")
+    (pin "SER"      (net "ROW_MOSI"))
+    (pin "SRCLK"    (net "SPI_CLK"))
+    (pin "RCLK"     (net "ROW_LATCH"))
+    (pin "OE_B"     (net "+3V3"))
+    (pin "SRCLR_B"  (net "+3V3"))
+    (pin "QA"       (net "ROW_SR_R1"))
+    (pin "QB"       (net "ROW_SR_R2"))
+    (pin "QC"       (net "ROW_SR_R3"))
+    (pin "QD"       (net "ROW_SR_R4"))
+    (pin "QE"       (net "ROW_SR_R5"))
+    (pin "QF"       (net "ROW_SR_R6"))
+    (pin "QG"       (net "ROW_SR_R7"))
+    (pin "QH"       (net "ROW_SR_R8"))
+    (pin "QH_PRIME" (net "ROW_CHAIN"))
+    (pin "VCC"      (net "+3V3"))
+    (pin "GND"      (net "GND"))
+  )
+
+  (symbol (lib_id "74HC595")
+    (at 177.8 50.8 0) (unit 1) (reference "U4") (value "74HC595")
+    (property "LCSC" "C5947") (property "Package" "SOIC-16")
+    (pin "SER"      (net "ROW_CHAIN"))
+    (pin "SRCLK"    (net "SPI_CLK"))
+    (pin "RCLK"     (net "ROW_LATCH"))
+    (pin "OE_B"     (net "+3V3"))
+    (pin "SRCLR_B"  (net "+3V3"))
+    (pin "QA"       (net "ROW_SR_R9"))
+    (pin "QB"       (net "ROW_SR_R10"))
+    (pin "QC"       (net "ROW_SR_R11"))
+    (pin "QD"       (net "ROW_SR_R12"))
+    (pin "QE"       (net "ROW_SR_R13"))
+    (pin "QF"       (net "ROW_SR_R14"))
+    (pin "QG"       (net "ROW_SR_R15"))
+    (pin "QH"       (net "ROW_SR_R16"))
+    (pin "QH_PRIME" (net "NC"))
+    (pin "VCC"      (net "+3V3"))
+    (pin "GND"      (net "GND"))
+  )
+
+  ;; ── Row MOSFETs Q_R1..Q_R16 (AO3401A P-ch) ─────────────────────────────
+  ;; Pattern for all 16 — shown symbolically; gate = ROW_SR_Rx via 100Ω gate R
+  ;; Pull-up 10kΩ from gate to VHEAT (default OFF for P-ch)
+  ;; Drain → ROW_x net → J2 pin
+
+  ;; R_R1 (100Ω gate resistor) + Q_R1 (AO3401A)
+  (symbol (lib_id "Device:R") (at 203.2 44.45 0) (reference "R_R1") (value "100R")
+    (property "LCSC" "C25076") (property "Package" "0402")
+    (pin "1" (net "ROW_SR_R1")) (pin "2" (net "QR1_GATE")))
+  (symbol (lib_id "Device:R") (at 208.28 44.45 0) (reference "R_PU1") (value "10k")
+    (property "LCSC" "C25744") (property "Package" "0402")
+    (pin "1" (net "VHEAT")) (pin "2" (net "QR1_GATE")))
+  (symbol (lib_id "AO3401A") (at 215.9 44.45 0) (reference "Q_R1") (value "AO3401A")
+    (property "LCSC" "C15127") (property "Package" "SOT-23")
+    (pin "G" (net "QR1_GATE"))
+    (pin "S" (net "VHEAT"))
+    (pin "D" (net "ROW1")))
+
+  ;; ... (Q_R2 through Q_R16 follow identical pattern, nets ROW_SR_R2..ROW_SR_R16
+  ;;      → QR2_GATE..QR16_GATE → Q_R2..Q_R16 → ROW2..ROW16)
+  ;; Abbreviated for clarity — all 16 are structurally identical
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK D — Column Shift Registers (U5, U6 = 74HC595)
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (symbol (lib_id "74HC595")
+    (at 152.4 88.9 0) (unit 1) (reference "U5") (value "74HC595")
+    (property "LCSC" "C5947") (property "Package" "SOIC-16")
+    (pin "SER"      (net "COL_MOSI"))
+    (pin "SRCLK"    (net "SPI_CLK"))
+    (pin "RCLK"     (net "COL_LATCH"))
+    (pin "OE_B"     (net "COL_OE_B"))
+    (pin "SRCLR_B"  (net "+3V3"))
+    (pin "QA"       (net "COL_SR_C1"))
+    (pin "QB"       (net "COL_SR_C2"))
+    (pin "QC"       (net "COL_SR_C3"))
+    (pin "QD"       (net "COL_SR_C4"))
+    (pin "QE"       (net "COL_SR_C5"))
+    (pin "QF"       (net "COL_SR_C6"))
+    (pin "QG"       (net "COL_SR_C7"))
+    (pin "QH"       (net "COL_SR_C8"))
+    (pin "QH_PRIME" (net "COL_CHAIN"))
+    (pin "VCC"      (net "+3V3"))
+    (pin "GND"      (net "GND"))
+  )
+
+  (symbol (lib_id "74HC595")
+    (at 177.8 88.9 0) (unit 1) (reference "U6") (value "74HC595")
+    (property "LCSC" "C5947") (property "Package" "SOIC-16")
+    (pin "SER"      (net "COL_CHAIN"))
+    (pin "SRCLK"    (net "SPI_CLK"))
+    (pin "RCLK"     (net "COL_LATCH"))
+    (pin "OE_B"     (net "COL_OE_B"))
+    (pin "SRCLR_B"  (net "+3V3"))
+    (pin "QA"       (net "COL_SR_C9"))
+    (pin "QB"       (net "COL_SR_C10"))
+    (pin "QC"       (net "COL_SR_C11"))
+    (pin "QD"       (net "COL_SR_C12"))
+    (pin "QE"       (net "COL_SR_C13"))
+    (pin "QF"       (net "COL_SR_C14"))
+    (pin "QG"       (net "COL_SR_C15"))
+    (pin "QH"       (net "COL_SR_C16"))
+    (pin "QH_PRIME" (net "NC"))
+    (pin "VCC"      (net "+3V3"))
+    (pin "GND"      (net "GND"))
+  )
+
+  ;; ── Col MOSFETs Q_C1..Q_C16 (AO3400A N-ch) ─────────────────────────────
+  ;; Gate = COL_SR_Cx via 100Ω; pull-down 10kΩ to GND (default OFF for N-ch)
+  ;; Drain ← COL_x net ← J2 pin; Source → GND
+
+  (symbol (lib_id "Device:R") (at 203.2 82.55 0) (reference "R_C1") (value "100R")
+    (property "LCSC" "C25076") (property "Package" "0402")
+    (pin "1" (net "COL_SR_C1")) (pin "2" (net "QC1_GATE")))
+  (symbol (lib_id "Device:R") (at 208.28 82.55 0) (reference "R_PD_C1") (value "10k")
+    (property "LCSC" "C25744") (property "Package" "0402")
+    (pin "1" (net "QC1_GATE")) (pin "2" (net "GND")))
+  (symbol (lib_id "AO3400A") (at 215.9 82.55 0) (reference "Q_C1") (value "AO3400A")
+    (property "LCSC" "C700233") (property "Package" "SOT-23")
+    (pin "G" (net "QC1_GATE"))
+    (pin "D" (net "COL1"))
+    (pin "S" (net "GND")))
+
+  ;; ... (Q_C2 through Q_C16 follow identical pattern)
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK E — J2 Textile Matrix Connector (32-pin FPC, 0.5mm)
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (symbol (lib_id "Connector:FPC-32")
+    (at 241.3 63.5 0) (unit 1) (reference "J2") (value "FPC_32P_0.5mm")
+    (property "LCSC" "C160391")
+    (pin "1"  (net "ROW1"))
+    (pin "2"  (net "ROW2"))
+    (pin "3"  (net "ROW3"))
+    (pin "4"  (net "ROW4"))
+    (pin "5"  (net "ROW5"))
+    (pin "6"  (net "ROW6"))
+    (pin "7"  (net "ROW7"))
+    (pin "8"  (net "ROW8"))
+    (pin "9"  (net "ROW9"))
+    (pin "10" (net "ROW10"))
+    (pin "11" (net "ROW11"))
+    (pin "12" (net "ROW12"))
+    (pin "13" (net "ROW13"))
+    (pin "14" (net "ROW14"))
+    (pin "15" (net "ROW15"))
+    (pin "16" (net "ROW16"))
+    (pin "17" (net "COL1"))
+    (pin "18" (net "COL2"))
+    (pin "19" (net "COL3"))
+    (pin "20" (net "COL4"))
+    (pin "21" (net "COL5"))
+    (pin "22" (net "COL6"))
+    (pin "23" (net "COL7"))
+    (pin "24" (net "COL8"))
+    (pin "25" (net "COL9"))
+    (pin "26" (net "COL10"))
+    (pin "27" (net "COL11"))
+    (pin "28" (net "COL12"))
+    (pin "29" (net "COL13"))
+    (pin "30" (net "COL14"))
+    (pin "31" (net "COL15"))
+    (pin "32" (net "COL16"))
+  )
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK F — Temperature Sensors (MCP9808, I2C addr 0x18 and 0x19)
+  ;; ─────────────────────────────────────────────────────────────────────────
+  (symbol (lib_id "MCP9808")
+    (at 127 88.9 0) (unit 1) (reference "U7") (value "MCP9808T-E/MC")
+    (property "LCSC" "C194710") (property "Package" "DFN-8")
+    (pin "VDD"   (net "+3V3"))
+    (pin "GND"   (net "GND"))
+    (pin "SDA"   (net "I2C_SDA"))
+    (pin "SCL"   (net "I2C_SCL"))
+    (pin "A0"    (net "GND"))
+    (pin "A1"    (net "GND"))
+    (pin "A2"    (net "GND"))
+    (pin "ALERT" (net "NC"))
+  )
+  (symbol (lib_id "MCP9808")
+    (at 127 104.14 0) (unit 1) (reference "U8") (value "MCP9808T-E/MC")
+    (property "LCSC" "C194710") (property "Package" "DFN-8")
+    (pin "VDD"   (net "+3V3"))
+    (pin "GND"   (net "GND"))
+    (pin "SDA"   (net "I2C_SDA"))
+    (pin "SCL"   (net "I2C_SCL"))
+    (pin "A0"    (net "+3V3"))
+    (pin "A1"    (net "GND"))
+    (pin "A2"    (net "GND"))
+    (pin "ALERT" (net "NC"))
+  )
+
+  ;; I2C pull-ups
+  (symbol (lib_id "Device:R") (at 114.3 83.82 0) (reference "R_SDA") (value "4.7k")
+    (property "LCSC" "C25900") (property "Package" "0402")
+    (pin "1" (net "+3V3")) (pin "2" (net "I2C_SDA")))
+  (symbol (lib_id "Device:R") (at 119.38 83.82 0) (reference "R_SCL") (value "4.7k")
+    (property "LCSC" "C25900") (property "Package" "0402")
+    (pin "1" (net "+3V3")) (pin "2" (net "I2C_SCL")))
+
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; BLOCK G — SK6805-EC20 Status LEDs (LED1..LED16, one per row)
+  ;; ─────────────────────────────────────────────────────────────────────────
+  ;; R_LED: 10Ω data-line impedance
+  (symbol (lib_id "Device:R") (at 88.9 119.38 0) (reference "R_LED") (value "10R")
+    (property "LCSC" "C25076") (property "Package" "0402")
+    (pin "1" (net "LED_DAT"))
+    (pin "2" (net "LED_DI")))
+
+  ;; LED1 (first in chain)
+  (symbol (lib_id "LED:SK6805")
+    (at 96.52 119.38 0) (unit 1) (reference "LED1") (value "SK6805-EC20")
+    (property "LCSC" "C2890364")
+    (pin "VDD" (net "+3V3"))
+    (pin "GND" (net "GND"))
+    (pin "DI"  (net "LED_DI"))
+    (pin "DO"  (net "LED_DO1"))
+  )
+  ;; LED2..LED16 chain: LED(n).DI = LED(n-1).DO
+  ;; (abbreviated; LED16.DO → NC)
+
+)
