@@ -1002,7 +1002,11 @@ function bindRange(id, lblId, key, transform) {
 bindRange('inp-w',    'lbl-w',    'jacketW');
 bindRange('inp-h',    'lbl-h',    'jacketH');
 bindRange('inp-psize','lbl-psize','pixelSize');
-document.getElementById('inp-psize').addEventListener('input', syncGeometryToMaterial);
+document.getElementById('inp-psize').addEventListener('input', () => {
+  const lenCm = computeTraceLengthCm(state.pattern, state.pixelSize, state.spacing);
+  document.getElementById('inp-tracecm').value = fmt(lenCm, 2);
+  document.getElementById('lbl-tracelen').textContent = `${fmt(lenCm,1)} cm`;
+});
 
 // Pixel side ↔ area sync (square: area = side²)
 document.getElementById('inp-pside').addEventListener('input', function() {
@@ -1013,7 +1017,10 @@ document.getElementById('inp-pside').addEventListener('input', function() {
   document.getElementById('lbl-psize').textContent = area;
   document.getElementById('lbl-pside').textContent = side;
   updatePixelCountFields();
-  syncGeometryToMaterial();
+  const lenCm = computeTraceLengthCm(state.pattern, state.pixelSize, state.spacing);
+  document.getElementById('inp-tracecm').value = fmt(lenCm, 2);
+  document.getElementById('lbl-tracelen').textContent = `${fmt(lenCm,1)} cm`;
+  render();
 });
 document.getElementById('inp-psize').addEventListener('input', function() {
   const side = Math.round(Math.sqrt(+this.value) * 10) / 10;
@@ -1072,7 +1079,11 @@ window.addEventListener('resize', () => { if (state.autoZoom) render(); });
 document.getElementById('inp-spacing').addEventListener('input', function() {
   state.spacing = +this.value;
   document.getElementById('lbl-spacing').textContent = this.value;
-  syncGeometryToMaterial();
+  // Update trace length display only — do not override user-set R
+  const lenCm = computeTraceLengthCm(state.pattern, state.pixelSize, state.spacing);
+  document.getElementById('inp-tracecm').value = fmt(lenCm, 2);
+  document.getElementById('lbl-tracelen').textContent = `${fmt(lenCm,1)} cm`;
+  render();
 });
 
 document.getElementById('inp-speed').addEventListener('input', function() {
@@ -1101,7 +1112,13 @@ document.querySelectorAll('input[name=voltage]').forEach(r => {
   r.addEventListener('change', () => { state.voltage = +r.value; render(); });
 });
 document.querySelectorAll('input[name=pattern]').forEach(r => {
-  r.addEventListener('change', () => { state.pattern = r.value; syncGeometryToMaterial(); });
+  r.addEventListener('change', () => {
+    state.pattern = r.value;
+    const lenCm = computeTraceLengthCm(state.pattern, state.pixelSize, state.spacing);
+    document.getElementById('inp-tracecm').value = fmt(lenCm, 2);
+    document.getElementById('lbl-tracelen').textContent = `${fmt(lenCm,1)} cm`;
+    render();
+  });
 });
 document.querySelectorAll('input[name=anim]').forEach(r => {
   r.addEventListener('change', () => { state.anim = r.value; });
