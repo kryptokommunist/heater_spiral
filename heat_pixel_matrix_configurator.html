@@ -131,6 +131,30 @@
   .readout-row.highlight span:last-child { color: #f78166; }
   .readout-divider { border: none; border-top: 1px solid #21262d; margin: 2px 0; }
 
+  /* ── Tooltips ── */
+  [data-tip] { position: relative; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 0;
+    top: calc(100% + 6px);
+    background: #1c2128;
+    border: 1px solid #444c56;
+    color: #c9d1d9;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 6px 9px;
+    border-radius: 6px;
+    white-space: pre-line;
+    width: 230px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s;
+    box-shadow: 0 4px 16px #0008;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+
   /* ── SVG viewport ── */
   #viewport {
     flex: 1;
@@ -156,21 +180,21 @@
   <div class="section">
     <div class="section-title">Jacket area</div>
     <div class="row-inputs">
-      <div class="field">
+      <div class="field" data-tip="Total width of the heated garment area in centimetres. Sets the horizontal extent of the pixel grid.">
         <label>Width (cm) <span id="lbl-w">64</span></label>
         <input type="range" id="inp-w" min="10" max="100" step="1" value="64">
       </div>
-      <div class="field">
+      <div class="field" data-tip="Total height of the heated garment area in centimetres. Sets the vertical extent of the pixel grid.">
         <label>Height (cm) <span id="lbl-h">64</span></label>
         <input type="range" id="inp-h" min="10" max="120" step="1" value="64">
       </div>
     </div>
     <div class="row-inputs">
-      <div class="field">
+      <div class="field" data-tip="Number of columns in the heating matrix. Each column shares one N-MOSFET low-side driver. Drives the FPC connector pin count.">
         <label>Columns (px)</label>
         <input type="number" id="inp-cols" min="1" max="64" step="1" value="16">
       </div>
-      <div class="field">
+      <div class="field" data-tip="Number of rows in the heating matrix. Each row shares one P-MOSFET high-side driver activated sequentially during multiplexed scan.">
         <label>Rows (px)</label>
         <input type="number" id="inp-rows" min="1" max="64" step="1" value="19">
       </div>
@@ -179,11 +203,11 @@
 
   <div class="section">
     <div class="section-title">Pixel size</div>
-    <div class="field">
+    <div class="field" data-tip="Side length of one square heating pixel. Changing this also updates the area and recalculates trace length.">
       <label>Side (cm) <span id="lbl-pside">3.2</span></label>
       <input type="range" id="inp-pside" min="0.5" max="10" step="0.1" value="4">
     </div>
-    <div class="field">
+    <div class="field" data-tip="Area of one square heating pixel in cm². Determines the convective surface and therefore how much power is needed to reach target temperature.">
       <label>Area (cm²) <span id="lbl-psize">10</span></label>
       <input type="range" id="inp-psize" min="1" max="100" step="0.5" value="16">
     </div>
@@ -192,7 +216,7 @@
 
   <div class="section">
     <div class="section-title">Supply voltage</div>
-    <div class="radio-group">
+    <div class="radio-group" data-tip="DC supply voltage for the heating matrix. Higher voltage allows thinner yarn (higher R) for same power. 12V is typical for 3S LiPo wearable packs.">
       <input type="radio" name="voltage" id="v5" value="5">
       <label for="v5">5 V</label>
       <input type="radio" name="voltage" id="v12" value="12" checked>
@@ -204,11 +228,11 @@
 
   <div class="section">
     <div class="section-title">Temperature range</div>
-    <div class="field">
+    <div class="field" data-tip="Lowest desired skin-contact surface temperature. Used to compute minimum required heater power (P = h·A·ΔT, h=12.5 W/m²K natural convection).">
       <label>Min °C <span id="lbl-tmin">32</span></label>
       <input type="range" id="inp-tmin" min="22" max="80" step="1" value="32">
     </div>
-    <div class="field">
+    <div class="field" data-tip="Highest desired skin-contact surface temperature. Sets the maximum power and resistance range. Keep ≤50°C for safe skin contact.">
       <label>Max °C <span id="lbl-tmax">50</span></label>
       <input type="range" id="inp-tmax" min="22" max="90" step="1" value="50">
     </div>
@@ -216,7 +240,7 @@
 
   <div class="section">
     <div class="section-title">Meander pattern</div>
-    <div class="select-group">
+    <div class="select-group" data-tip="How the conductive yarn is routed within each pixel to fill the area. Affects total trace length and therefore resistance for a given spacing.">
       <input type="radio" name="pattern" id="pat-lr" value="lr" checked>
       <label for="pat-lr">↔ Snake horizontal</label>
       <input type="radio" name="pattern" id="pat-tb" value="tb">
@@ -232,11 +256,11 @@
 
   <div class="section">
     <div class="section-title">Trace</div>
-    <div class="field">
+    <div class="field" data-tip="Number of parallel yarn lines that fill each pixel. More lines = longer trace = higher resistance and more even heat distribution. Linked to Resistance/pixel.">
       <label>Line spacing <span id="lbl-spacing">5</span> lines</label>
       <input type="range" id="inp-spacing" min="2" max="20" step="1" value="5">
     </div>
-    <div class="field">
+    <div class="field" data-tip="Estimated total embroidery yarn length per pixel, calculated from the pattern, pixel area and line spacing. Read-only — set by line spacing or material inputs.">
       <label>Trace length <span id="lbl-tracelen">—</span></label>
     </div>
     <div class="readout-row" style="font-size:11px;color:#8b949e;margin-top:-6px;">
@@ -246,15 +270,15 @@
 
   <div class="section">
     <div class="section-title" style="font-size:13px; color:#e6edf3; font-weight:700; text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid #30363d; padding-bottom:6px;">Heater Material</div>
-    <div class="field">
+    <div class="field" data-tip="Target electrical resistance of one heater pixel in ohms. Determines current and power at the supply voltage. Changing this back-calculates the required trace length and line spacing.">
       <label>Resistance/pixel (Ω)</label>
       <input type="number" id="inp-rpixel" min="0.1" max="10000" step="0.1" value="12.5">
     </div>
-    <div class="field">
+    <div class="field" data-tip="Resistance per metre of the conductive yarn used for the heater trace. Typical values: silver yarn 5–15 Ω/m, stainless steel 20–50 Ω/m, zinc-coated 25–60 Ω/m.">
       <label>Resistivity (Ω/m)</label>
       <input type="number" id="inp-rpermeter" min="1" max="100000" step="1" value="30">
     </div>
-    <div class="field">
+    <div class="field" data-tip="Length of conductive yarn routed inside one pixel in centimetres. Together with resistivity, determines Resistance/pixel. Changing this updates R directly.">
       <label>Trace length/pixel (cm)</label>
       <input type="number" id="inp-tracecm" min="0.1" max="10000" step="0.1" value="5">
     </div>
@@ -265,11 +289,11 @@
 
   <div class="section">
     <div class="section-title">View</div>
-    <div class="field" style="flex-direction:row; align-items:center; gap:8px;">
+    <div class="field" style="flex-direction:row; align-items:center; gap:8px;" data-tip="When checked, the wiring diagram automatically scales to fill the available window. Uncheck to control zoom manually.">
       <input type="checkbox" id="inp-autozoom" checked style="accent-color:#f78166; width:14px; height:14px; cursor:pointer; flex-shrink:0;">
       <label for="inp-autozoom" style="font-size:12px; color:#c9d1d9; cursor:pointer;">Auto-fit to window</label>
     </div>
-    <div class="field" id="zoom-field" style="opacity:0.35; pointer-events:none;">
+    <div class="field" id="zoom-field" style="opacity:0.35; pointer-events:none;" data-tip="Manual zoom level for the wiring diagram. Only active when Auto-fit is off.">
       <label>Zoom <span id="lbl-zoom">100%</span></label>
       <input type="range" id="inp-zoom" min="20" max="300" step="5" value="100">
     </div>
@@ -277,7 +301,7 @@
 
   <div class="section">
     <div class="section-title">Animation</div>
-    <div class="select-group">
+    <div class="select-group" data-tip="Visualise how the matrix is driven. Scan rows/cols shows multiplexed activation. Wave shows a diagonal sweep. Static renders the full wiring diagram without animation.">
       <input type="radio" name="anim" id="anim-none" value="none" checked>
       <label for="anim-none">⬛ Static (off)</label>
       <input type="radio" name="anim" id="anim-row" value="row">
@@ -289,7 +313,7 @@
       <input type="radio" name="anim" id="anim-wave" value="wave">
       <label for="anim-wave">〜 Wave (diagonal)</label>
     </div>
-    <div class="field" style="margin-top:4px;">
+    <div class="field" style="margin-top:4px;" data-tip="Time between animation steps in milliseconds. Lower = faster scan. At 100 Hz real scan rate each row gets ~0.625 ms — this slider is slowed for visualisation.">
       <label>Speed <span id="lbl-speed">400</span> ms/step</label>
       <input type="range" id="inp-speed" min="50" max="2000" step="50" value="400">
     </div>
@@ -306,31 +330,31 @@
   </div>
 
   <div id="readouts">
-    <div class="readout-row"><span>Grid</span><span id="r-grid">—</span></div>
-    <div class="readout-row highlight"><span>Total pixels</span><span id="r-pixels">—</span></div>
+    <div class="readout-row" data-tip="Columns × rows."><span>Grid</span><span id="r-grid">—</span></div>
+    <div class="readout-row highlight" data-tip="Total individually addressable heating pixels."><span>Total pixels</span><span id="r-pixels">—</span></div>
     <hr class="readout-divider">
-    <div class="readout-row"><span>Power/pixel (at R)</span><span id="r-pactual">—</span></div>
-    <div class="readout-row"><span>Current/pixel (at R)</span><span id="r-iactual">—</span></div>
-    <div class="readout-row"><span>Full-row current (all cols)</span><span id="r-rowcur">—</span></div>
+    <div class="readout-row" data-tip="Power dissipated by one pixel at the configured resistance and supply voltage. P = V²/R."><span>Power/pixel (at R)</span><span id="r-pactual">—</span></div>
+    <div class="readout-row" data-tip="Current through one pixel at the configured resistance. I = V/R."><span>Current/pixel (at R)</span><span id="r-iactual">—</span></div>
+    <div class="readout-row" data-tip="Current through the row high-side MOSFET when all columns in that row are active simultaneously (full-row drive mode). Size row MOSFETs for this value."><span>Full-row current (all cols)</span><span id="r-rowcur">—</span></div>
     <hr class="readout-divider">
-    <div class="readout-row"><span>Power/pixel (min)</span><span id="r-pmin">—</span></div>
-    <div class="readout-row"><span>Power/pixel (max)</span><span id="r-pmax">—</span></div>
-    <div class="readout-row"><span>Resistance range</span><span id="r-res">—</span></div>
-    <div class="readout-row"><span>Current range</span><span id="r-cur">—</span></div>
+    <div class="readout-row" data-tip="Power per pixel needed to reach the minimum target temperature. P = h·A·ΔT (natural convection model, h=12.5 W/m²K)."><span>Power/pixel (min)</span><span id="r-pmin">—</span></div>
+    <div class="readout-row" data-tip="Power per pixel needed to reach the maximum target temperature."><span>Power/pixel (max)</span><span id="r-pmax">—</span></div>
+    <div class="readout-row" data-tip="Required heater resistance range (R = V²/P) to span the temperature range at the supply voltage."><span>Resistance range</span><span id="r-res">—</span></div>
+    <div class="readout-row" data-tip="Required current range through one pixel to span the temperature range."><span>Current range</span><span id="r-cur">—</span></div>
     <hr class="readout-divider">
-    <div class="readout-row"><span>MOSFETs</span><span id="r-mosfet">—</span></div>
+    <div class="readout-row" data-tip="Number of row + column driver MOSFETs required. Each row needs one P-MOSFET (high-side); each column one N-MOSFET (low-side)."><span>MOSFETs</span><span id="r-mosfet">—</span></div>
     <hr class="readout-divider">
-    <div class="readout-row"><span>Row bands</span><span id="r-rowband">—</span></div>
-    <div class="readout-row"><span>Col bands</span><span id="r-colband">—</span></div>
-    <div class="readout-row highlight"><span>Total copper (+ 10%)</span><span id="r-total">—</span></div>
-    <div class="readout-row"><span>Row AWG</span><span id="r-awg">—</span></div>
-    <div class="readout-row"><span>Max copper R/row (total)</span><span id="r-maxcopper-r">—</span></div>
-    <div class="readout-row"><span>Max copper Ω/m (row)</span><span id="r-maxcopper-rm">—</span></div>
-    <div class="readout-row"><span>Max copper R/col (total)</span><span id="r-maxcopper-c">—</span></div>
-    <div class="readout-row"><span>Max copper Ω/m (col)</span><span id="r-maxcopper-cm">—</span></div>
+    <div class="readout-row" data-tip="Total length of copper conductive band needed for all row buses. Row bands run horizontally across the full garment width."><span>Row bands</span><span id="r-rowband">—</span></div>
+    <div class="readout-row" data-tip="Total length of copper conductive band needed for all column buses. Col bands run vertically across the full garment height."><span>Col bands</span><span id="r-colband">—</span></div>
+    <div class="readout-row highlight" data-tip="Sum of all row and column copper band lengths with 10% fabrication margin. Order at least this much copper tape or conductive yarn for the bus network."><span>Total copper (+ 10%)</span><span id="r-total">—</span></div>
+    <div class="readout-row" data-tip="Minimum AWG wire gauge for the row bus to safely carry the full-row current. Based on IPC-2221 for 30°C rise."><span>Row AWG</span><span id="r-awg">—</span></div>
+    <div class="readout-row" data-tip="Maximum allowable total DC resistance of the copper row bus (end-to-end) to keep voltage drop under 5% of supply."><span>Max copper R/row (total)</span><span id="r-maxcopper-r">—</span></div>
+    <div class="readout-row" data-tip="Maximum allowable resistivity (Ω/m) of the copper yarn/tape used for row buses, derived from the row length and max allowed resistance."><span>Max copper Ω/m (row)</span><span id="r-maxcopper-rm">—</span></div>
+    <div class="readout-row" data-tip="Maximum allowable total DC resistance of the copper column bus."><span>Max copper R/col (total)</span><span id="r-maxcopper-c">—</span></div>
+    <div class="readout-row" data-tip="Maximum allowable resistivity (Ω/m) of the copper yarn/tape used for column buses."><span>Max copper Ω/m (col)</span><span id="r-maxcopper-cm">—</span></div>
     <hr class="readout-divider">
-    <div class="readout-row"><span>Trace/pixel</span><span id="r-tracelen">—</span></div>
-    <div class="readout-row"><span>Total trace (all pixels)</span><span id="r-tracetotal">—</span></div>
+    <div class="readout-row" data-tip="Estimated heater yarn length per pixel from the current pattern, pixel area, and line spacing."><span>Trace/pixel</span><span id="r-tracelen">—</span></div>
+    <div class="readout-row" data-tip="Total heater yarn required across all pixels (trace/pixel × pixel count). Add ~15% for joins and waste when ordering yarn."><span>Total trace (all pixels)</span><span id="r-tracetotal">—</span></div>
   </div>
 </div>
 
