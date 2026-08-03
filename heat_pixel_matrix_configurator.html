@@ -157,12 +157,12 @@
     <div class="section-title">Jacket area</div>
     <div class="row-inputs">
       <div class="field">
-        <label>Width (cm) <span id="lbl-w">51</span></label>
-        <input type="range" id="inp-w" min="10" max="100" step="1" value="51">
+        <label>Width (cm) <span id="lbl-w">64</span></label>
+        <input type="range" id="inp-w" min="10" max="100" step="1" value="64">
       </div>
       <div class="field">
-        <label>Height (cm) <span id="lbl-h">51</span></label>
-        <input type="range" id="inp-h" min="10" max="120" step="1" value="51">
+        <label>Height (cm) <span id="lbl-h">64</span></label>
+        <input type="range" id="inp-h" min="10" max="120" step="1" value="64">
       </div>
     </div>
     <div class="row-inputs">
@@ -342,8 +342,8 @@
 <script>
 // ── State ──────────────────────────────────────────────────────────────────
 const state = {
-  jacketW: 51.2,  // cm  (16 × √10 ≈ 50.6, rounded to nearest pixel boundary)
-  jacketH: 51.2,  // cm
+  jacketW: 64,  // cm  (16 × 4cm pixels)
+  jacketH: 64,  // cm
   pixelSize: 16, // cm²
   voltage: 12,
   tMin: 40,
