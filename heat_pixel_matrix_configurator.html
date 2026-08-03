@@ -1124,23 +1124,40 @@ document.querySelectorAll('input[name=anim]').forEach(r => {
   r.addEventListener('change', () => { state.anim = r.value; });
 });
 
+// Solve for integer spacing that best matches a target trace length for the current pattern/pixel.
+function solveSpacingFromLength(lenCm, pattern, pixelSizeCm2) {
+  let best = 2, bestDiff = Infinity;
+  for (let n = 2; n <= 20; n++) {
+    const diff = Math.abs(computeTraceLengthCm(pattern, pixelSizeCm2, n) - lenCm);
+    if (diff < bestDiff) { bestDiff = diff; best = n; }
+  }
+  return best;
+}
+
 // ── Heater material: three linked inputs (R = Ω/m × length) ────────────────
 // Updating any one field recomputes the third from the other two.
-// 'geo' source means length was derived from pattern geometry → updates R.
 function syncMaterial(changed) {
   const ri = document.getElementById('inp-rpixel');
   const mi = document.getElementById('inp-rpermeter');
   const li = document.getElementById('inp-tracecm');
-  if (changed === 'r') {
+  if (changed === 'r' || changed === 'm') {
     const len = +mi.value > 0 ? (+ri.value / +mi.value) * 100 : 0;
     li.value = fmt(len, 2);
-  } else if (changed === 'm') {
-    const len = +mi.value > 0 ? (+ri.value / +mi.value) * 100 : 0;
-    li.value = fmt(len, 2);
+    // Back-solve spacing from the target trace length
+    const spacing = solveSpacingFromLength(len, state.pattern, state.pixelSize);
+    state.spacing = spacing;
+    document.getElementById('inp-spacing').value = spacing;
+    document.getElementById('lbl-spacing').textContent = spacing;
+    document.getElementById('lbl-tracelen').textContent = `${fmt(len,1)} cm`;
   } else {
-    // length changed (manual or geometry) → update R
+    // length changed manually → update R, then solve spacing
     const r = (+li.value / 100) * +mi.value;
     ri.value = fmt(r, 2);
+    const spacing = solveSpacingFromLength(+li.value, state.pattern, state.pixelSize);
+    state.spacing = spacing;
+    document.getElementById('inp-spacing').value = spacing;
+    document.getElementById('lbl-spacing').textContent = spacing;
+    document.getElementById('lbl-tracelen').textContent = `${fmt(+li.value,1)} cm`;
   }
   state.rPixel = +ri.value;
   state.rPerMeter = +mi.value;
