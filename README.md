@@ -10,7 +10,7 @@ An interactive design tool for resistive heat pixel textile matrices — configu
 
 Design a matrix of individually addressable heating pixels embroidered into a garment. The tool computes all electrical parameters, draws the full wiring diagram with connector routing, and exports a PDF spec sheet ready to hand to a textile manufacturer.
 
-![Heat Pixel Matrix wiring diagram](heat_pixel_matrix.svg)
+![Heat Pixel Matrix Configurator](screenshot.png)
 
 ---
 

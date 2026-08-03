@@ -205,12 +205,12 @@
   <div class="section">
     <div class="section-title">Temperature range</div>
     <div class="field">
-      <label>Min °C <span id="lbl-tmin">40</span></label>
-      <input type="range" id="inp-tmin" min="22" max="80" step="1" value="40">
+      <label>Min °C <span id="lbl-tmin">32</span></label>
+      <input type="range" id="inp-tmin" min="22" max="80" step="1" value="32">
     </div>
     <div class="field">
-      <label>Max °C <span id="lbl-tmax">70</span></label>
-      <input type="range" id="inp-tmax" min="22" max="90" step="1" value="70">
+      <label>Max °C <span id="lbl-tmax">50</span></label>
+      <input type="range" id="inp-tmax" min="22" max="90" step="1" value="50">
     </div>
   </div>
 
@@ -346,8 +346,8 @@ const state = {
   jacketH: 64,  // cm
   pixelSize: 16, // cm²
   voltage: 12,
-  tMin: 40,
-  tMax: 70,
+  tMin: 32,
+  tMax: 50,
   pattern: 'lr',
   spacing: 5,    // number of trace lines per pixel
   zoom: 100,
@@ -1353,6 +1353,28 @@ function exportPDF() {
   <tr><td>COL 1–${cols} (pins 1–${cols})</td><td>Low-side column sinks (N-MOSFET). PWM-controlled for per-pixel intensity.</td></tr>
   <tr><td>Supply</td><td>${s.voltage}V DC, ${fmt(fullRowCurrent*1.2,1)}A minimum (fast warm-up), 3A minimum (scan mode)</td></tr>
 </table>
+
+<h2>Pixel Yarn Specification</h2>
+<p>Each of the ${pixels} heater pixels is an individual embroidered trace using resistive yarn. The following spec applies to every pixel uniformly.</p>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr class="highlight"><td>Pixel dimensions</td><td>${fmt(side,1)} cm × ${fmt(side,1)} cm (square)</td></tr>
+  <tr><td>Trace pattern</td><td>${patternNames[s.pattern] || s.pattern}</td></tr>
+  <tr class="highlight"><td>Number of trace lines</td><td>${s.spacing} lines</td></tr>
+  <tr class="highlight"><td>Trace length per pixel</td><td>${fmt(traceLenCm,1)} cm</td></tr>
+  <tr><td>Yarn resistance</td><td>${fmt(s.rPerMeter,1)} Ω/m</td></tr>
+  <tr class="highlight"><td>Target resistance per pixel</td><td>${fmt(s.rPixel,2)} Ω</td></tr>
+  <tr><td>Resistance tolerance</td><td>±15% (${fmt(s.rPixel*0.85,1)} – ${fmt(s.rPixel*1.15,1)} Ω)</td></tr>
+  <tr><td>Power per pixel at ${s.voltage}V</td><td>${fmt(pActual,2)} W</td></tr>
+  <tr><td>Current per pixel at ${s.voltage}V</td><td>${fmt(iActual*1000,0)} mA</td></tr>
+  <tr><td>Operating temperature range</td><td>${s.tMin}°C – ${s.tMax}°C surface</td></tr>
+</table>
+<div class="note">
+  <strong>Trace layout:</strong> For a <em>${patternNames[s.pattern] || s.pattern}</em> pattern at ${s.spacing} lines,
+  the yarn runs back and forth ${s.spacing} times across the ${fmt(side,1)} cm pixel area with a line pitch of ~${fmt((side*0.8)/s.spacing,2)} cm.
+  Begin and end the trace at the row/column bus intersection corners of the pixel.
+  Use a single continuous yarn with no joins within the pixel area.
+</div>
 
 <h2>Fabrication Notes</h2>
 <p><strong>Heater yarn:</strong> Use conductive yarn with ~${fmt(s.rPerMeter,0)} Ω/m resistance. Embroider or sew each pixel as a ${(patternNames[s.pattern]||s.pattern).toLowerCase()} trace covering the full ${fmt(side,1)}×${fmt(side,1)} cm pixel area.</p>
