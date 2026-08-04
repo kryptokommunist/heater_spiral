@@ -1,0 +1,79 @@
+title,authors,venue,year,category,read,ranking,link
+ThermalBracelet: Exploring Thermal Haptic Feedback Around the Wrist,"Peiris, Feng, Chan",CHI,2019,Thermal Wearable Feedback,false,low,https://doi.org/10.1145/3290605.3300400
+ThermoCaress: A Wearable with Illusory Moving Thermal Stimulation,"Liu, Nishikawa et al.",CHI,2021,Thermal Wearable Feedback,false,low,https://doi.org/10.1145/3411764.3445777
+Feeling the Temperature of the Room: Unobtrusive Thermal Display of Engagement,"Haliburton, Schött et al.",IMWUT,2023,Thermal Wearable Feedback,false,medium,https://doi.org/10.1145/3580820
+HeatFlow: A Thermal-Tactile Display for Dynamic 2D Thermal Movements,"Singhal, Honrales, Kim",CHI,2025,Thermal Wearable Feedback,false,low,https://doi.org/10.1145/3746059.3747619
+Thermal in Motion: Designing Thermal Flow Illusions,"Singhal, Honrales et al.",CHI,2024,Thermal Wearable Feedback,false,low,https://doi.org/10.1145/3654777.3676460
+ThermEarhook: Spatial Thermal Haptic Feedback on the Auricular Skin,"Nasser, Zheng, Zhu",ISMAR,2021,Thermal Wearable Feedback,false,low,https://doi.org/10.1145/3462244.3479922
+Thermodule: Wearable and Modular Thermal Feedback System,"Maeda, Kurahashi",AH Conference,2019,Thermal Wearable Feedback,false,low,
+ThermoPixels: Personalizing Arousal-Based Interfaces through Hybrid Crafting,"Umair, Sas, Alfaras",DIS,2020,Thermal Wearable Feedback,false,high,https://doi.org/10.1145/3357236.3395512
+The Heat Is On: A Temperature Display for Affective Feedback,"Tewell, Bird, Buchanan",CHI,2017,Thermal Wearable Feedback,false,low,https://dl.acm.org/doi/10.1145/3027063.3053164
+Scaling Notifications Beyond Alerts (thermal mechanical electrical),"Matthies, Daza Parra, Urban",arXiv,2018,Thermal Wearable Feedback,false,low,https://doi.org/10.48550/arxiv.1702.00786
+Dual-sided Peltier Elements for Rapid Thermal Feedback in Wearables,"Kang, Kim et al.",ICRA Workshop,2024,Thermal Wearable Feedback,false,low,https://doi.org/10.1007/s40820-023-01126-1
+Thermal Masking Across the Human Body,"Wang, Honrales et al.",CHI,2026,Thermal Wearable Feedback,false,high,https://doi.org/10.1145/3772318.3791601
+A Wrist-Worn Thermohaptic Device for Graceful Interruption,"Bolton, Jalaliniya, Pederson",IxDA,2015,Thermal Wearable Feedback,false,low,https://doi.org/10.55612/s-5002-026-003
+ThermalBitDisplay: Thermal Feedback Perceived Differently by Body Part,"Niijima, Takeda et al.",CHI EA,2020,Thermal Wearable Feedback,false,low,https://doi.org/10.1007/s11042-023-14672-y
+Thermal and Wind Devices for Multisensory HCI: An Overview,"Da Silveira, Rodrigues, Saleme",Multimedia Tools,2023,Thermal Wearable Feedback,false,low,https://doi.org/10.1007/s11042-023-14672-y
+Affective Sleeve: Wearable Materials with Haptic Action for Calmness,"Papadopoulou, Berry, Knight, Picard",ACII,2019,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1007/978-3-030-21935-2_23
+Breathing Scarf: First-Person Wearable for Emotional Regulation,"Cochrane, Cao, Girouard, Loke",CHI,2022,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3490149.3501330
+Breathing Inward: Targeted-Heat Wearable for Diaphragmatic Breathing,"Dublin, Giron, Grishko, Talmasky",CHI,2026,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1145/3772318.3791804
+Biosensing and Actuation — Platforms Coupling Body Input-Output Modalities,"Alfaras, Primett, Umair et al.",Sensors (MDPI),2020,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.3390/s20215968
+Echoes of the Body: Multisensory Biofeedback for Interoceptive Awareness,"Qiu, Zordan",ACM,2025,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1038/s41593-023-01425-1
+ambienBeat: Wrist Tactile Biofeedback for Heart Rate Regulation,"Choi, Ishii",CHI,2020,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3374920.3374938
+SootheMind: Vibrotactile and Thermotactile Stimuli for Emotion Modulation,"Wang, Ke, Huang et al.",CHI,2026,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3772318.3791768
+Exploring Personalized Vibrotactile and Thermal Patterns for Affect Regulation,"Umair, Sas et al.",CHI,2021,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1145/3461778.3462042
+Affective Touch as Immediate and Passive Wearable Intervention,"Zhao, Tao et al.",IMWUT,2023,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3569484
+Emotional Response to Vibrothermal Stimuli,"Shetty, Mehta et al.",Applied Sciences,2021,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.3390/app11198905
+Affective Stroking: Thermal Mid-Air Tactile for Stress Regulation,"He, Zeng et al.",Applied Sciences,2024,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.3390/app14209494
+Constructing the Thermal Affective Design Space for Emotion Regulation,"Feng, Halskov, Bennett et al.",CHI,2026,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3772318.3791565
+Augmenting Aesthetic Chills Using a Wearable Prosthesis,"Haar, Jain, Schoeller, Maes",Scientific Reports,2020,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1038/s41598-020-77951-w
+Breeze: Sharing Biofeedback Through Wearable Technologies,"Frey, Grabli, Slyper, Cauchard",CHI,2018,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3369835
+WarmMind: A Thermal Necklace for Emotional Awareness,Roquet,Dissertation,2021,Somatic / Interoceptive Biofeedback,false,low,
+Affective Wearable Haptic Interventions: A Systematic Literature Review,"Lee, Rüddiger et al.",IMWUT,2026,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3790116
+Interoceptive Interaction: An Embodied Metaphor Inspired Approach to Designing for Meditation,"Daudén Roquet, Sas",CHI,2021,Somatic / Interoceptive Biofeedback,false,low,https://doi.org/10.1145/3411764.3445137
+A Framework for Interactive Mindfulness Meditation Using Attention-Regulation,"Niksirat, Silpasuwanchai et al.",CHI,2017,Attention Restoration Theory + Technology,false,low,https://doi.org/10.1145/3025453.3025914
+Attention Regulation Framework: Designing Self-Regulated Mindfulness Technologies,"Niksirat, Silpasuwanchai et al.",TOCHI,2019,Attention Restoration Theory + Technology,false,low,https://doi.org/10.1145/3344272
+Immediate Attention Restoration from Interactive and Immersive Technologies,"Barton, Sheen, Byrne et al.",Frontiers in Psychology,2020,Attention Restoration Theory + Technology,false,high,https://doi.org/10.3389/fpsyg.2020.02050
+Human Attention Restoration Flow and Creativity: A Conceptual Integration,"Pham, Sanocki",Journal of Imaging,2024,Attention Restoration Theory + Technology,false,low,https://doi.org/10.3390/jimaging10040083
+Designing Restoration: Protecting and Restoring Attention Through Participatory Design,Tench,Dissertation,2022,Attention Restoration Theory + Technology,false,low,
+Optimising Visual UIs to Reduce Cognitive Fatigue,"Panakaduwa, Coates et al.",CHI,2024,Attention Restoration Theory + Technology,false,low,https://doi.org/10.1145/3613904.3641542
+Using Interoception to Foster Flow States During Mental Work,"Berger, Knierim, Benke",CHI,2023,Flow State Detection and Induction,false,low,https://doi.org/10.1145/3544548.3581508
+Exploring Flow in Real-World Knowledge Work Using cEEGrid Sensors,"Knierim, Stano, Kurz, Heusch",CHI,2025,Flow State Detection and Induction,false,low,https://doi.org/10.1145/3706598.3713512
+DeepFlow: Detecting Optimal User Experience from Physiological Data,"Maier, Elsner et al.",AAMAS,2019,Flow State Detection and Induction,false,low,https://doi.org/10.24963/ijcai.2019/196
+Flow From Motion: A Deep Learning Approach,"Eteke, Havlucu et al.",arXiv,2018,Flow State Detection and Induction,false,low,https://arxiv.org/abs/1806.00431
+Improving Attention Using Wearables via Haptic and Multimodal Rhythmic Stimuli,"Whitmore, Chan, Zhang et al.",CHI,2024,Flow State Detection and Induction,false,low,https://doi.org/10.1145/3613904.3642256
+Closed-Loop Rhythmic Haptic Biofeedback via Smartwatch for Relaxation,"Lee, Moschina et al.",ISWC,2025,Flow State Detection and Induction,false,low,https://doi.org/10.1145/3715071.3750412
+Why Meditation Wearables Fail: Reward Misspecification in Biofeedback Systems,Bose,arXiv,2026,Calming / Stress Wearables,false,low,
+AttentivU: Biofeedback Glasses to Monitor and Improve Attention,"Kosmyna, Sarawgi, Maes",UbiComp,2018,Calming / Stress Wearables,false,low,https://doi.org/10.1145/3267305.3274124
+Using Real-Time Biofeedback of HRV to Track and Improve Attention,"Loudon, Zampelis, Deininger",CHI,2017,Calming / Stress Wearables,false,low,https://doi.org/10.3389/fpubh.2017.00258
+FAR: End-to-End Vibrotactile System for Affect Regulation,"Miri, Arora et al.",CHI,2022,Calming / Stress Wearables,false,low,https://doi.org/10.1145/3491102.3517619
+PIV: Placement Pattern Personalization of a Vibrotactile Breathing Pacer,"Miri, Flory et al.",CHI,2020,Calming / Stress Wearables,false,low,https://doi.org/10.1145/3365107
+You Can't Force Calm: Designing Respiratory Regulating Interfaces,"Wongsuphasawat, Gamburg, Moraveji",CHI,2012,Calming / Stress Wearables,false,low,https://dl.acm.org/doi/10.1145/2207676.2208604
+Peripheral Paced Respiration: Influencing Physiology During Information Work,Moraveji et al.,CHI,2011,Calming / Stress Wearables,false,high,https://dl.acm.org/doi/10.1145/1978942.1979312
+Shared User Interfaces of Physiological Data: Social Biofeedback Review,"Moge, Wang, Cho",CHI,2022,Calming / Stress Wearables,false,high,https://doi.org/10.1145/3491102.3517495
+CognitIDE: Physiological Data Linked to Source Code in IntelliJ,"Stolp, Brandebusemeyer et al.",HPI/SAP internal,2024,Developer Experience & Physiological Monitoring,false,low,
+DevEx: What Actually Drives Productivity,"Noda, Storey, Forsgren, Greiler",ACM Queue,2023,Developer Experience & Physiological Monitoring,false,low,https://doi.org/10.1145/3595878
+DevEx in Action: A Study of Its Tangible Impacts,"Forsgren, Kalliamvakou, Noda et al.",ACM Queue,2023,Developer Experience & Physiological Monitoring,false,low,https://doi.org/10.1145/3643140
+Measuring Mental Workload Using Physiological Measures: A Systematic Review,"Charles, Nixon",Applied Ergonomics,2019,Developer Experience & Physiological Monitoring,false,low,https://doi.org/10.1016/j.apergo.2018.08.028
+Designing with the Body: Somaesthetic Interaction Design,Höök,MIT Press (book),2018,Soma Design / Body-Centric HCI,false,low,https://mitpress.mit.edu/9780262037532/
+The Somatic Turn in Human-Computer Interaction,"Loke, Schiphorst",Interactions,2018,Soma Design / Body-Centric HCI,false,low,https://doi.org/10.1145/3236675
+Embracing First-Person Perspectives in Soma-Based Design,"Höök, Caramiaux, Erkut et al.",Informatics,2018,Soma Design / Body-Centric HCI,false,low,https://doi.org/10.3390/informatics5010008
+Unpacking Non-Dualistic Design: The Soma Design Case,"Höök, Benford et al.",ACM Transactions,2021,Soma Design / Body-Centric HCI,false,low,https://doi.org/10.1145/3462448
+Making New Worlds — Transformative Becomings with Soma Design,"Stähl, Balaam, Comber et al.",CHI,2022,Soma Design / Body-Centric HCI,false,low,https://doi.org/10.1145/3491102.3502018
+Towards Designing for Everyday Thermal Experiences,"Ichihashi, Bheda, Howell et al.",CHI,2025,Soma Design / Body-Centric HCI,false,low,https://doi.org/10.1145/3689050.3704423
+Ambient Displays: Architectural Space as Interface,"Wisneski, Ishii, Dahley et al.",Int. Workshop,1998,Peripheral / Ambient Displays,false,low,https://doi.org/10.1007/3-540-69706-3_4
+A Toolkit for Managing User Attention in Peripheral Displays,"Matthews, Dey, Mankoff, Carter",UIST,2004,Peripheral / Ambient Displays,false,low,https://doi.org/10.1145/1029632.1029676
+LiteCo: Illuminating Workspace Awareness with Ambient Display,"Xu, Liu, Van Essen",CHI EA,2025,Peripheral / Ambient Displays,false,low,https://doi.org/10.1145/3706599.3719781
+Ambient Information Design for a Work Environment,"Torpus, Kovacevic, Navarro",HCI (Springer),2023,Peripheral / Ambient Displays,false,low,
+Exploring Vibrotactile and Peripheral Cues for Spatial Attention Guidance,"Stratmann, Lücken, Gruenefeld",Pervasive Displays,2018,Peripheral / Ambient Displays,false,low,https://doi.org/10.1145/3205873.3205874
+A Survey on Measuring Cognitive Workload in HCI,"Kosch, Karolus, Zagermann, Reiterer",ACM Computing Surveys,2023,Cognitive Load / Attention Monitoring,false,low,https://doi.org/10.1145/3582272
+Measuring Cognitive Load Using Eye Tracking in Visual Computing,"Zagermann, Pfeil, Reiterer",CHI Workshop,2016,Cognitive Load / Attention Monitoring,false,low,https://doi.org/10.1145/2993901.2993908
+Neuro-Informed Joint Learning for Cognitive Workload Decoding,"Yang, Feng, Chen",arXiv,2025,Cognitive Load / Attention Monitoring,false,low,https://doi.org/10.1007/s12559-020-09773-x
+Real-Time Attention Regulation Using Wearable EEG-Based BCI,"Huang, Chen et al.",IEEE Transactions,2024,Cognitive Load / Attention Monitoring,false,low,https://doi.org/10.1109/tbme.2024.3468351
+Bodily Maps of Emotions,"Nummenmaa, Glerean, Hari, Hietanen",PNAS,2014,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1073/pnas.1321664111
+Somaesthetic Meditation Wearable: Exploring the Effect of Targeted Warmth Technology on Meditators' Experiences,"Ezer, Giron, Erel, Zuckerman",CHI,2024,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1145/3613904.3642557
+"Corsetto: A Kinesthetic Garment for Designing, Composing for, and Experiencing an Intersubjective Haptic Voice","Kilic Afsar, Stepanova, Ben Abdesslem, Luft, Cotton",CHI,2023,Soma Design / Body-Centric HCI,false,high,https://doi.org/10.1145/3544548.3581294
+A Journey Inward: The Somaesthetic Experience of a Heated Walking Carpet,"Dublin, Ezer, Zuckerman",CHI EA,2024,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.1145/3613905.3650915
+OmniFiber: Integrated Fluidic Fiber Actuators for Weaving Movement based Interactions into the Fabric of Everyday Life,"Kilic Afsar, Shtarbanov, Mor, Nakagaki, Forman, Modrei, Jeong, Hjort, Höök, Ishii",UIST,2021,Soma Design / Body-Centric HCI,false,high,
+Purrfect Pitch: Exploring Musical Interval Learning through Multisensory Interfaces,"Chin, Fang, Paradiso",arXiv,2024,Somatic / Interoceptive Biofeedback,false,high,https://doi.org/10.48550/arxiv.2407.09721
+Embroidered Resistive Pressure Sensors: A Novel Approach for Textile Interfaces,"Aigner, Pointner, Preindl, Parzer, Haller",CHI,2020,E-Textiles / Fabrication,false,high,https://dl.acm.org/doi/10.1145/3313831.3376305
